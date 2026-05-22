@@ -20,7 +20,7 @@ let LTC_ADDRESS = 'DEINE_LTC_ADRESSE';
 let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
 let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
 let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
-const SUPER_OWNER = 1472661189824872622; // DEINE DISCORD ID
+const SUPER_OWNER = 1472661189824872622n; // DEINE DISCORD ID
 let owners = new Set();
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
 
