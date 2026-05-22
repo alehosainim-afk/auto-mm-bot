@@ -425,7 +425,7 @@ client.on('interactionCreate', async (interaction) => {
       const finalEmbed = new EmbedBuilder()
         .setTitle('Scam Notification') // <-- Titel ändern
         .setDescription('Im sorry but u got scammed') // <-- Text ändern
-        .setColor(ff0000); // <-- Farbe ändern (hex)
+        .setColor(0xff0000); // <-- Farbe ändern (hex)
       // ======================================================
 
       await interaction.update({ embeds: [finalEmbed], components: [] });
