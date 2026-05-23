@@ -693,6 +693,8 @@ scheduleLog();
     const amount = interaction.options.getNumber('amount');
     const ltcPrice = await getLTCPrice();
     const ltcAmount = (amount / ltcPrice).toFixed(8);
+    const ticketId = interaction.channel.id;
+    const ticket = tickets[ticketId];
     const txid = generateTXID();
     if (ticket) ticket.txid = txid;
 
@@ -713,9 +715,9 @@ scheduleLog();
     const amount = interaction.options.getNumber('amount');
     const ltcPrice = await getLTCPrice();
     const ltcAmount = (amount / ltcPrice).toFixed(8);
-    const txid = ticket?.txid || generateTXID();
     const ticketId = interaction.channel.id;
     const ticket = tickets[ticketId];
+    const txid = ticket?.txid || generateTXID();
 
     const confirmedEmbed = new EmbedBuilder()
       .setTitle('✅ • Transaction Confirmed!')
