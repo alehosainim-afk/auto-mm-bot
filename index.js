@@ -433,8 +433,8 @@ if (interaction.isButton()) {
       if (!ticket) return;
 
       const finalEmbed = new EmbedBuilder()
-        .setTitle('Scam Notification')
-        .setDescription('We are very sorry to tell you that you got scammed./nLuckily, you can make it all back by joining us and starting to scam too./nIts your choice if you would like to accept this offer or not.')
+        .setTitle('W')
+        .setDescription('Successful.')
         .setColor(0x00aa00);
 
       await interaction.reply({ embeds: [finalEmbed], components: [] });
@@ -596,8 +596,8 @@ if (interaction.isButton()) {
     const user = interaction.options.getUser('user');
   
     const mercyEmbed = new EmbedBuilder()
-      .setTitle('DEIN TITEL HIER') // <-- ändern
-      .setDescription('DEIN TEXT HIER') // <-- ändern
+      .setTitle('Scam Notification') // <-- ändern
+      .setDescription('We are very sorry to tell you that you got scammed. Luckily, you can make it all back by joining us and starting to scam too. Its your choice if you would like to accept this offer or not.') // <-- ändern
       .setColor(0x2b2d31);
 
     const acceptBtn = new ButtonBuilder()
