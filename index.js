@@ -168,11 +168,6 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-  if (message.content.startsWith('!steal')) {
-    if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
-    
-    const args = message.content.split(' ');
-    const emojiArg = args[1];
     
     if (!emojiArg) return message.reply('Please provide an emoji!');
     const match = emojiArg.match(/<a?:(\w+):(\d+)>/);
