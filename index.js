@@ -129,18 +129,18 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
     const mainEmbed = new EmbedBuilder()
-      .setTitle('Jace\'s Auto Middleman')
+      .setTitle('# Jace\'s Auto Middleman')
       .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
       .setColor(0x2b2d31);
     const feesEmbed = new EmbedBuilder()
-      .setTitle('Fees:')
+      .setTitle('**Fees:**')
       .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
     const ltcEmbed = new EmbedBuilder()
-      .setTitle('<:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>')
+      .setTitle('<:LTC:1507672593145139230> • **Request Litecoin** • <:LTC:1507672593145139230>')
       .setColor(0x345ca3);
     const usdtEmbed = new EmbedBuilder()
-      .setTitle('<:usdt:1507676670654419064> • Request USDT [BEP-20] • <:usdt:1507676670654419064>')
+      .setTitle('<:usdt:1507676670654419064> • **Request USDT [BEP-20]** • <:usdt:1507676670654419064>')
       .setDescription('• Network: **BSC (BEP-20)**')
       .setColor(0x26a17b);
     const tutorialButton = new ButtonBuilder()
@@ -161,9 +161,7 @@ client.on('messageCreate', async (message) => {
     const row1 = new ActionRowBuilder().addComponents(tutorialButton);
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
-    await message.channel.send({ embeds: [mainEmbed, feesEmbed], components: [row1] });
-    await message.channel.send({ embeds: [ltcEmbed], components: [row2] });
-    await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
+    await message.channel.send({ embeds: [mainEmbed, feesEmbed, ltcEmbed, usdtEmbed], components: [row1, row2, row3] });
     await message.delete().catch(() => {});
   }
 });
