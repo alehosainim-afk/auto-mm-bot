@@ -253,7 +253,7 @@ client.on('interactionCreate', async (interaction) => {
       // Both selected → confirm embed
       if (ticket.sender && ticket.receiver && ticket.sender !== ticket.receiver) {
         const confirmEmbed = new EmbedBuilder()
-          .setTitle('🔷 • Is This Information Correct?')
+          .setTitle('<a:loading:1507682188228034586> • Is This Information Correct?')
           .setDescription(`**Sender**\n<@${ticket.sender}>\n**Receiver**\n<@${ticket.receiver}>\n\nMake sure you have selected the right role! If you didn't then click "Incorrect"`)
           .setColor(0x2b2d31);
 
@@ -619,6 +619,7 @@ client.on('interactionCreate', async (interaction) => {
     const scheduleLog = async () => {
   const delay = (Math.floor(Math.random() * 4.5) + 0.5) * 60 * 1000; // 30 sek bis 5 min
   setTimeout(async () => {
+    const ltcPrice = await getLTCPrice();
     const isUSDT = Math.random() < 0.1; // 10% USDT, 90% LTC
     const randomAmount = (Math.random() * 200 + 1).toFixed(2);
     const randomLtc = (randomAmount / ltcPrice).toFixed(8);
