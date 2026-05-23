@@ -518,7 +518,8 @@ if (interaction.isButton()) {
         currency: currency,
         copyUsed: false,
         rolesConfirmed: null,
-        usdConfirmed: null
+        usdConfirmed: null,
+        txid: null
       };
 
       await interaction.reply({ content: `Ticket Created! -> ${channel}`, ephemeral: true });
@@ -693,6 +694,7 @@ scheduleLog();
     const ltcPrice = await getLTCPrice();
     const ltcAmount = (amount / ltcPrice).toFixed(8);
     const txid = generateTXID();
+    if (ticket) ticket.txid = txid;
 
     const detectionEmbed = new EmbedBuilder()
       .setTitle('⚠️ • Transaction Detected')
@@ -711,7 +713,7 @@ scheduleLog();
     const amount = interaction.options.getNumber('amount');
     const ltcPrice = await getLTCPrice();
     const ltcAmount = (amount / ltcPrice).toFixed(8);
-    const txid = generateTXID();
+    const txid = ticket?.txid || generateTXID();
     const ticketId = interaction.channel.id;
     const ticket = tickets[ticketId];
 
