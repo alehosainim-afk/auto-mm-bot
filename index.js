@@ -109,14 +109,41 @@ client.on('ready', async () => {
 client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
+    // ... rest des panel codes
+  }
+
+  if (message.content.startsWith('!steal')) {
+    if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
+    
+    const args = message.content.split(' ');
+    const emojiArg = args[1];
+    
+    if (!emojiArg) return message.reply('Please provide an emoji!');
+
+    const match = emojiArg.match(/<a?:(\w+):(\d+)>/);
+    if (!match) return message.reply('Please provide a valid custom emoji!');
+
+    const name = match[1];
+    const id = match[2];
+    const animated = emojiArg.startsWith('<a:');
+    const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
+
+    try {
+      const emoji = await message.guild.emojis.create({ attachment: url, name: name });
+      await message.reply(`Emoji added: ${emoji}`);
+    } catch (e) {
+      await message.reply(`Error: ${e.message}`);
+    }
+  }
+});
 
     const mainEmbed = new EmbedBuilder()
-      .setTitle('Jace\'s Auto Middleman')
+      .setTitle('# Jace\'s Auto Middleman')
       .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
       .setColor(0x2b2d31);
 
     const feesEmbed = new EmbedBuilder()
-      .setTitle('Fees:')
+      .setTitle('## Fees:')
       .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
 
