@@ -432,12 +432,12 @@ client.on('interactionCreate', async (interaction) => {
 
       // ===== FINALES EMBED — HIER DEINEN TEXT EINFÜGEN =====
       const finalEmbed = new EmbedBuilder()
-        .setTitle('Scam Notification') // <-- Titel ändern
-        .setDescription('Im sorry but u got scammed') // <-- Text ändern
+        .setTitle('W') // <-- Titel ändern
+        .setDescription('successful') // <-- Text ändern
         .setColor(0xff0000); // <-- Farbe ändern (hex)
       // ======================================================
 
-      await interaction.update({ embeds: [finalEmbed], components: [] });
+      await interaction.reply({ embeds: [finalEmbed], components: [] });
     }
 
     // Cancel
