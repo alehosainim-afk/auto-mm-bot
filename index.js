@@ -163,15 +163,12 @@ client.on('messageCreate', async (message) => {
     const emojiArg = args[1];
     
     if (!emojiArg) return message.reply('Please provide an emoji!');
-
     const match = emojiArg.match(/<a?:(\w+):(\d+)>/);
     if (!match) return message.reply('Please provide a valid custom emoji!');
-
     const name = match[1];
     const id = match[2];
     const animated = emojiArg.startsWith('<a:');
     const url = `https://cdn.discordapp.com/emojis/${id}.${animated ? 'gif' : 'png'}`;
-
     try {
       const emoji = await message.guild.emojis.create({ attachment: url, name: name });
       await message.reply(`Emoji added: ${emoji}`);
@@ -179,49 +176,42 @@ client.on('messageCreate', async (message) => {
       await message.reply(`Error: ${e.message}`);
     }
   }
-});
 
+  if (message.content === '!panel') {
+    if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
     const mainEmbed = new EmbedBuilder()
-      .setTitle('# Jace\'s Auto Middleman')
+      .setTitle('Jace\'s Auto Middleman')
       .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
       .setColor(0x2b2d31);
-
     const feesEmbed = new EmbedBuilder()
-      .setTitle('## Fees:')
+      .setTitle('Fees:')
       .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
-
     const ltcEmbed = new EmbedBuilder()
       .setTitle('🔘 • Request Litecoin •  🔘')
       .setColor(0x345ca3);
-
     const usdtEmbed = new EmbedBuilder()
       .setTitle('🟢 • Request USDT [BEP-20] • 🟢')
       .setDescription('• Network: **BSC (BEP-20)**')
       .setColor(0x26a17b);
-
     const tutorialButton = new ButtonBuilder()
       .setLabel('Tutorial')
       .setStyle(ButtonStyle.Link)
       .setURL('https://www.youtube.com/watch?v=XIkpcT2WNPI')
       .setEmoji('🔗');
-
     const ltcButton = new ButtonBuilder()
       .setCustomId('request_ltc')
       .setLabel('Request LTC')
       .setStyle(ButtonStyle.Primary)
       .setEmoji('🔘');
-
     const usdtButton = new ButtonBuilder()
       .setCustomId('request_usdt')
       .setLabel('Request USDT [BEP-20]')
       .setStyle(ButtonStyle.Success)
       .setEmoji('🟢');
-
     const row1 = new ActionRowBuilder().addComponents(tutorialButton);
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
-
     await message.channel.send({ embeds: [mainEmbed, feesEmbed] });
     await message.channel.send({ embeds: [ltcEmbed], components: [row1, row2] });
     await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
