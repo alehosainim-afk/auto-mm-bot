@@ -116,8 +116,6 @@ client.on('messageCreate', async (message) => {
     const feesEmbed = new EmbedBuilder()
       .setDescription('## Fees:\n• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
-      .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
-      .setColor(0x2b2d31);
 
     const ltcEmbed = new EmbedBuilder()
       .setTitle('<:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>')
