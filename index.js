@@ -676,7 +676,8 @@ scheduleLog();
       .setDescription(`**Transactions**\n[${formatTXID(txid)}](https://blockchair.com/litecoin/transaction/${txid}) (${ltcAmount} LTC)\n**Total Amount Received**\n\`${ltcAmount}\` LTC ($${amount.toFixed(2)})`)
       .setColor(0x00aa00);
 
-    await interaction.reply({ embeds: [confirmedEmbed] });
+    await interaction.reply({ embeds: [confirmedEmbed], ephemeral: true });
+    await interaction.channel.send({ embeds: [confirmedEmbed] });
 
     if (ticket) {
       const proceedEmbed = new EmbedBuilder()
