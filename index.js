@@ -385,7 +385,7 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     // Release
-    if (interaction.customId.startsWith('release_')) {
+    if (interaction.customId.startsWith('release_') && !interaction.customId.startsWith('release_confirm_') && !interaction.customId.startsWith('release_back_')) {
       const ticketId = interaction.channel.id;
       const ticket = tickets[ticketId];
       if (!ticket) return;
