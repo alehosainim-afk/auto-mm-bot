@@ -161,7 +161,9 @@ client.on('messageCreate', async (message) => {
     const row1 = new ActionRowBuilder().addComponents(tutorialButton);
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
-    await message.channel.send({ embeds: [mainEmbed, feesEmbed, ltcEmbed, usdtEmbed], components: [row1, row2, row3] });
+    await message.channel.send({ embeds: [mainEmbed, feesEmbed], components: [row1] });
+    await message.channel.send({ embeds: [ltcEmbed], components: [row2] });
+    await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
     await message.delete().catch(() => {});
   }
 });
