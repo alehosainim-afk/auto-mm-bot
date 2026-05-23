@@ -149,12 +149,10 @@ client.on('messageCreate', async (message) => {
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
 
-    await message.channel.send({ embeds: [mainEmbed], components: [row1] });
-    await message.channel.send({ embeds: [feesEmbed] });
-    await message.channel.send({ embeds: [ltcEmbed], components: [row2] });
-    await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
-    await message.delete().catch(() => {});
-  }
+    await message.channel.send({ 
+      embeds: [mainEmbed, feesEmbed, ltcEmbed, usdtEmbed], 
+      components: [row1, row2, row3] 
+    });
 
   if (message.content.startsWith('!steal')) {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
