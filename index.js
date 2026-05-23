@@ -110,13 +110,11 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
     const mainEmbed = new EmbedBuilder()
-      .setDescription('# Jace\'s Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .setTitle('Jace\'s Auto Middleman')
+      .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .addFields({ name: 'Fees:', value: '• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are __**FREE**__' })
       .setColor(0x2b2d31);
-
-    const feesEmbed = new EmbedBuilder()
-      .setDescription('## Fees:\n• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
-      .setColor(0x2b2d31);
-
+    
     const ltcEmbed = new EmbedBuilder()
       .setTitle('<:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>')
       .setColor(0x345ca3);
@@ -148,7 +146,7 @@ client.on('messageCreate', async (message) => {
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
 
-    await message.channel.send({ embeds: [mainEmbed, feesEmbed] });
+    await message.channel.send({ embeds: [mainEmbed], components: [row1] });
     await message.channel.send({ embeds: [ltcEmbed], components: [row1, row2] });
     await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
     await message.delete().catch(() => {});
