@@ -1,5 +1,6 @@
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
 const express = require('express');
+const config = require('./config.js');
 
 const client = new Client({
   intents: [
@@ -14,14 +15,13 @@ const app = express();
 app.use(express.json());
 
 // ============ KONFIGURATION ============
-let TOS_CHANNEL_ID = 'TOS_CHANNEL_ID_HIER';
-let TICKET_CATEGORY_ID = 'TICKET_CATEGORY_ID_HIER';
-let LTC_ADDRESS = 'DEINE_LTC_ADRESSE';
-let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
+let TOS_CHANNEL_ID = config.TOS_CHANNEL_ID;
+let TICKET_CATEGORY_ID = config.TICKET_CATEGORY_ID;
+let LTC_ADDRESS = config.LTC_ADDRESS;
+let USDT_ADDRESS = config.USDT_ADDRESS;
 let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
-let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
-const SUPER_OWNER = 1472661189824872622n; // DEINE DISCORD ID
-let owners = new Set();
+let SIMULATE_ROLE_ID = config.SIMULATE_ROLE_ID;
+const SUPER_OWNER = BigInt(config.SUPER_OWNER);
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
 
 // ============ LTC PREIS API ============
@@ -105,7 +105,7 @@ client.on('ready', async () => {
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
   ].map(cmd => cmd.toJSON());
 
-  const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+  const rest = new REST({ version: '10' }).setToken(config.TOKEN);
   await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
 });
 
@@ -739,5 +739,5 @@ scheduleLog();
   }
 });
 
-client.login(process.env.TOKEN);
+client.login(config.TOKEN);
 app.listen(3000, () => console.log('Server running'));
