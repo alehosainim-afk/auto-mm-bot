@@ -110,8 +110,12 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
     const mainEmbed = new EmbedBuilder()
-      .setDescription('# Jace\'s Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>\n\n**Fees:**\n• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are __**FREE**__')
-      .setColor(0x2b2d31);
+      .setDescription('# Jace\'s Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .addFields(
+        { name: '\u200b', value: '\u200b' },
+        { name: 'Fees:', value: '• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are __**FREE**__' }
+      )
+  .setColor(0x2b2d31);
     
     const ltcEmbed = new EmbedBuilder()
       .setTitle('<:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>')
