@@ -110,21 +110,21 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!owners.has(message.author.id) && BigInt(message.author.id) !== SUPER_OWNER) return;
     const mainEmbed = new EmbedBuilder()
-      .setTitle('Jace\'s Auto Middleman')
-      .setDescription('• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .setDescription('# Jace\'s Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
       .setColor(0x2b2d31);
 
     const feesEmbed = new EmbedBuilder()
-      .setTitle('Fees:')
+      .setDescription('## Fees:\n• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
+      .setColor(0x2b2d31);
       .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
 
     const ltcEmbed = new EmbedBuilder()
-      .setTitle('🔘 • Request Litecoin •  🔘')
+      .setTitle('<:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>')
       .setColor(0x345ca3);
 
     const usdtEmbed = new EmbedBuilder()
-      .setTitle('🟢 • Request USDT [BEP-20] • 🟢')
+      .setTitle('<:usdt:1507676670654419064> • Request USDT [BEP-20] • <:usdt:1507676670654419064>')
       .setDescription('• Network: **BSC (BEP-20)**')
       .setColor(0x26a17b);
 
@@ -138,13 +138,13 @@ client.on('messageCreate', async (message) => {
       .setCustomId('request_ltc')
       .setLabel('Request LTC')
       .setStyle(ButtonStyle.Primary)
-      .setEmoji('🔘');
+      .setEmoji('<:LTC:1507672593145139230>');
 
     const usdtButton = new ButtonBuilder()
       .setCustomId('request_usdt')
       .setLabel('Request USDT [BEP-20]')
       .setStyle(ButtonStyle.Success)
-      .setEmoji('🟢');
+      .setEmoji('<:usdt:1507676670654419064>');
 
     const row1 = new ActionRowBuilder().addComponents(tutorialButton);
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
@@ -188,10 +188,10 @@ client.on('messageCreate', async (message) => {
       .setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**')
       .setColor(0x2b2d31);
     const ltcEmbed = new EmbedBuilder()
-      .setTitle('🔘 • Request Litecoin •  🔘')
+      .setTitle('<:LTC:1507672593145139230> • Request Litecoin •  <:LTC:1507672593145139230>')
       .setColor(0x345ca3);
     const usdtEmbed = new EmbedBuilder()
-      .setTitle('🟢 • Request USDT [BEP-20] • 🟢')
+      .setTitle('<:usdt:1507676670654419064> • Request USDT [BEP-20] • <:usdt:1507676670654419064>')
       .setDescription('• Network: **BSC (BEP-20)**')
       .setColor(0x26a17b);
     const tutorialButton = new ButtonBuilder()
@@ -203,12 +203,12 @@ client.on('messageCreate', async (message) => {
       .setCustomId('request_ltc')
       .setLabel('Request LTC')
       .setStyle(ButtonStyle.Primary)
-      .setEmoji('🔘');
+      .setEmoji('<:LTC:1507672593145139230>');
     const usdtButton = new ButtonBuilder()
       .setCustomId('request_usdt')
       .setLabel('Request USDT [BEP-20]')
       .setStyle(ButtonStyle.Success)
-      .setEmoji('🟢');
+      .setEmoji('<:usdt:1507676670654419064>');
     const row1 = new ActionRowBuilder().addComponents(tutorialButton);
     const row2 = new ActionRowBuilder().addComponents(ltcButton);
     const row3 = new ActionRowBuilder().addComponents(usdtButton);
@@ -602,7 +602,7 @@ client.on('interactionCreate', async (interaction) => {
       ticket.usdConfirmed = { trader1: false, trader2: false };
 
       const usdConfirmEmbed = new EmbedBuilder()
-        .setTitle('🔷 • USD amount set to')
+        .setTitle('<a:loading:1507682188228034586> • USD amount set to')
         .setDescription(`\`$${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`)
         .setColor(0x2b2d31);
 
@@ -678,7 +678,7 @@ client.on('interactionCreate', async (interaction) => {
     const usdtTxid = '0x' + randomTxid.slice(0, 64);
 
     const autoEmbed = new EmbedBuilder()
-      .setTitle(isUSDT ? '🟢 • Trade Completed' : '🔘 • Trade Completed')
+      .setTitle(isUSDT ? '<:usdt:1507676670654419064> • Trade Completed' : '<:LTC:1507672593145139230> • Trade Completed')
       .setDescription(isUSDT
         ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\``
         : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``
