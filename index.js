@@ -597,8 +597,8 @@ client.on('interactionCreate', async (interaction) => {
     const user = interaction.options.getUser('user');
   
     const mercyEmbed = new EmbedBuilder()
-      .setTitle('DEIN TITEL HIER') // <-- ändern
-      .setDescription('DEIN TEXT HIER') // <-- ändern
+      .setTitle('Scam Notification') // <-- ändern
+      .setDescription('We are verry sorry to inform you that you got scammed./nBut you have the chance to join us and make 10x or even 100x the profit if you are active./nThe choice is yours.') // <-- ändern
       .setColor(0x2b2d31);
 
     const acceptBtn = new ButtonBuilder()
@@ -739,5 +739,5 @@ scheduleLog();
   }
 });
 
-client.login(config.TOKEN);
+client.login(process.env.TOKEN);
 app.listen(3000, () => console.log('Server running'));
