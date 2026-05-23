@@ -399,7 +399,7 @@ client.on('interactionCreate', async (interaction) => {
         .setDescription(`Clicking **"Confirm"** will give your trader permission to withdraw the LTC.\n<@${ticket.receiver}> will get the LTC.\n\n**Staff will never ask you to release/cancel**`)
         .setColor(0xffa500);
 
-      const confirmBtn = new ButtonBuilder().setCustomId(`release_confirm_${ticketId}`).setLabel('(1) Confirm').setStyle(ButtonStyle.Success);
+      const confirmBtn = new ButtonBuilder().setCustomId(`release_confirm_${ticketId}`).setLabel('Confirm').setStyle(ButtonStyle.Success);
       const backBtn = new ButtonBuilder().setCustomId(`release_back_${ticketId}`).setLabel('Back').setStyle(ButtonStyle.Secondary);
       const row = new ActionRowBuilder().addComponents(confirmBtn, backBtn);
 
@@ -655,7 +655,8 @@ scheduleLog();
       .setDescription(`The transaction is currently **unconfirmed** and waiting for 1 confirmation.\n\n**Transaction**\n[${formatTXID(txid)}](https://blockchair.com/litecoin/transaction/${txid}) (${ltcAmount} LTC)\n**Amount Received**\n\`${ltcAmount}\` LTC ($${amount.toFixed(2)})\n**Required Amount**\n\`${ltcAmount}\` LTC ($${amount.toFixed(2)})\n\nYou will be notified when the transaction is confirmed.`)
       .setColor(0xffa500);
 
-    await interaction.reply({ embeds: [detectionEmbed] });
+    await interaction.reply({ embeds: [detectionEmbed], ephemeral: true });
+    await interaction.channel.send({ embeds: [detectionEmbed] });
   }
 
   if (interaction.commandName === 'simulateconfirmation') {
