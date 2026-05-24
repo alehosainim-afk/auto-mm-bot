@@ -676,7 +676,7 @@ if (interaction.isButton()) {
         ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\``
         : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``
       )
-      .setColor(isUSDT ? 0x26a17b : 0x00aa00);
+      .setColor(isUSDT ? 0x26a17b : 0xb9b9bb);
 
     await channel.send({ embeds: [autoEmbed] }).catch(() => {});
     scheduleLog();
