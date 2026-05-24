@@ -640,14 +640,14 @@ if (interaction.isButton()) {
   }
 
   if (interaction.commandName === 'setowner') {
-    if (BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+    if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     const user = interaction.options.getUser('user');
     owners.add(user.id);
     await interaction.reply({ content: `${user} added as owner.`, ephemeral: true });
   }
 
   if (interaction.commandName === 'removeowner') {
-    if (BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+    if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     const user = interaction.options.getUser('user');
     owners.delete(user.id);
     await interaction.reply({ content: `${user} removed as owner.`, ephemeral: true });
