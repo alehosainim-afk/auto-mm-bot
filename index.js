@@ -582,7 +582,9 @@ if (interaction.isButton()) {
       // Create ticket channel
       const ticketName = `${currency.toLowerCase()}-${interaction.user.username}_${Math.floor(Math.random() * 90000) + 10000}-${Math.floor(Math.random() * 900000) + 100000}`;
 
-      const channel = await interaction.guild.channels.create({
+    let channel;
+    try {
+      channel = await interaction.guild.channels.create({
         name: ticketName,
         type: ChannelType.GuildText,
         parent: TICKET_CATEGORY_ID,
@@ -593,7 +595,10 @@ if (interaction.isButton()) {
           { id: client.user.id, allow: ['ViewChannel', 'SendMessages', 'ManageChannels'] }
         ]
       });
-
+    } catch (e) {
+      return interaction.reply({ content: 'Ticket category not configured. Please contact an admin.', ephemeral: true });
+    }
+      
       tickets[channel.id] = {
         trader1: interaction.user.id,
         trader2: trader2.id,
