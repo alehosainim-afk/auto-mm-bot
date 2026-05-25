@@ -20,6 +20,17 @@ let LTC_ADDRESS = 'DEINE_LTC_ADRESSE';
 let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
 let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
 let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
+let STATS_CHANNEL_ID = 'STATS_CHANNEL_ID_HIER';
+const userStats = {};
+const rankRoles = {
+  Quartz: { min: 500, roleId: null },
+  Amethyst: { min: 1000, roleId: null },
+  Azure: { min: 2500, roleId: null },
+  Ruby: { min: 5000, roleId: null },
+  Emerald: { min: 10000, roleId: null },
+  Diamond: { min: 15000, roleId: null },
+  Obsidian: { min: 25000, roleId: null }
+};
 const SUPER_OWNER = 1472661189824872622n; // DEINE DISCORD ID
 let owners = new Set();
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
@@ -44,6 +55,41 @@ function generateTXID() {
 
 function formatTXID(txid) {
   return `${txid.slice(0, 10)}...${txid.slice(-8)}`;
+}
+
+function getCurrentRank(usd) {
+  const ranks = Object.entries(rankRoles).reverse();
+  for (const [name, data] of ranks) {
+    if (usd >= data.min) return name;
+  }
+  return null;
+}
+
+function getNextRank(usd) {
+  const ranks = Object.entries(rankRoles);
+  for (const [name, data] of ranks) {
+    if (usd < data.min) return name;
+  }
+  return null;
+}
+
+async function updateRank(guild, userId) {
+  try {
+    const member = await guild.members.fetch(userId);
+    const stats = userStats[userId] || { usd: 0, deals: 0 };
+    for (const [name, data] of Object.entries(rankRoles)) {
+      if (!data.roleId) continue;
+      const role = guild.roles.cache.get(data.roleId);
+      if (!role) continue;
+      if (stats.usd >= data.min) {
+        await member.roles.add(role);
+      } else {
+        await member.roles.remove(role);
+      }
+    }
+  } catch (e) {
+    console.log('Error updating rank:', e.message);
+  }
 }
 
 // ============ BOT READY ============
@@ -103,6 +149,37 @@ client.on('ready', async () => {
       .setName('simulateconfirmation')
       .setDescription('Simulate transaction confirmation')
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
+    new SlashCommandBuilder()
+      .setName('setstatsrannel')
+      .setDescription('Set stats channel')
+      .addStringOption(o => o.setName('channel_id').setDescription('Channel ID').setRequired(true))
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    new SlashCommandBuilder()
+      .setName('setrole')
+      .setDescription('Set rank role')
+      .addStringOption(o => o.setName('rank').setDescription('Rank name').setRequired(true)
+        .addChoices(
+          { name: 'Quartz', value: 'Quartz' },
+          { name: 'Amethyst', value: 'Amethyst' },
+          { name: 'Azure', value: 'Azure' },
+          { name: 'Ruby', value: 'Ruby' },
+          { name: 'Emerald', value: 'Emerald' },
+          { name: 'Diamond', value: 'Diamond' },
+          { name: 'Obsidian', value: 'Obsidian' }
+        ))
+      .addRoleOption(o => o.setName('role').setDescription('Role').setRequired(true))
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    new SlashCommandBuilder()
+      .setName('stats')
+      .setDescription('View your stats')
+      .addUserOption(o => o.setName('user').setDescription('User').setRequired(false)),
+    new SlashCommandBuilder()
+      .setName('setstats')
+      .setDescription('Edit user stats')
+      .addUserOption(o => o.setName('user').setDescription('User').setRequired(true))
+      .addNumberOption(o => o.setName('usd').setDescription('Total USD Value').setRequired(false))
+      .addIntegerOption(o => o.setName('deals').setDescription('Deals Completed').setRequired(false))
+      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   ].map(cmd => cmd.toJSON());
 
   const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
@@ -432,6 +509,17 @@ if (interaction.isButton()) {
       const ticket = tickets[ticketId];
       if (!ticket) return;
 
+    if (ticket) {
+      if (!userStats[ticket.sender]) userStats[ticket.sender] = { usd: 0, deals: 0 };
+      if (!userStats[ticket.receiver]) userStats[ticket.receiver] = { usd: 0, deals: 0 };
+      userStats[ticket.sender].usd += ticket.usdAmount;
+      userStats[ticket.sender].deals += 1;
+      userStats[ticket.receiver].usd += ticket.usdAmount;
+      userStats[ticket.receiver].deals += 1;
+      await updateRank(interaction.guild, ticket.sender);
+      await updateRank(interaction.guild, ticket.receiver);
+    }
+      
       const finalEmbed = new EmbedBuilder()
         .setTitle('W')
         .setDescription('Successful.')
@@ -626,14 +714,63 @@ if (interaction.isButton()) {
     TICKET_CATEGORY_ID = interaction.options.getString('category_id');
     await interaction.reply({ content: `Category set to: ${TICKET_CATEGORY_ID}`, ephemeral: true });
   }
+  
+  if (interaction.commandName === 'setstatschannel') {
+    if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+    STATS_CHANNEL_ID = interaction.options.getString('channel_id');
+    await interaction.reply({ content: `Stats channel set!`, ephemeral: true });
+  }
 
+  if (interaction.commandName === 'setrole') {
+    if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+    const rank = interaction.options.getString('rank');
+    const role = interaction.options.getRole('role');
+    rankRoles[rank].roleId = role.id;
+    await interaction.reply({ content: `${rank} role set to ${role}!`, ephemeral: true });
+  }
+
+  if (interaction.commandName === 'setstats') {
+    if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+    const user = interaction.options.getUser('user');
+    const usd = interaction.options.getNumber('usd');
+    const deals = interaction.options.getInteger('deals');
+    if (!userStats[user.id]) userStats[user.id] = { usd: 0, deals: 0 };
+    if (usd !== null) userStats[user.id].usd = usd;
+    if (deals !== null) userStats[user.id].deals = deals;
+    await updateRank(interaction.guild, user.id);
+    await interaction.reply({ content: `Stats updated for ${user}!`, ephemeral: true });
+  }
+
+  if (interaction.commandName === 'stats') {
+    if (interaction.channel.id !== STATS_CHANNEL_ID) {
+      return interaction.reply({ content: 'You can only use this command in the stats channel!', ephemeral: true });
+    }
+    const target = interaction.options.getUser('user') || interaction.user;
+    const stats = userStats[target.id] || { usd: 0, deals: 0 };
+    const currentRank = getCurrentRank(stats.usd);
+    const nextRank = getNextRank(stats.usd);
+  
+    const statsEmbed = new EmbedBuilder()
+      .setTitle(target.username)
+      .setThumbnail(target.displayAvatarURL())
+      .addFields(
+        { name: 'Current Rank:', value: currentRank ? `<@&${rankRoles[currentRank].roleId}> ($${rankRoles[currentRank].min.toLocaleString()})` : 'None' },
+        { name: 'Next Rank:', value: nextRank ? `<@&${rankRoles[nextRank].roleId}> ($${rankRoles[nextRank].min.toLocaleString()})` : 'Max Rank reached!' },
+        { name: 'Deals Completed', value: `${stats.deals}` },
+        { name: 'Total USD Value', value: `$${stats.usd.toLocaleString()}` }
+      )
+      .setColor(0x2b2d31);
+  
+    await interaction.reply({ embeds: [statsEmbed] });
+  }
+  
   if (interaction.commandName === 'settoschannel') {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     TOS_CHANNEL_ID = interaction.options.getString('channel_id');
     await interaction.reply({ content: `TOS channel set to: ${TOS_CHANNEL_ID}`, ephemeral: true });
   }
 
-  if (interaction.commandName === 'setsimulaterole') {
+   if (interaction.commandName === 'setsimulaterole') {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     SIMULATE_ROLE_ID = interaction.options.getRole('role').id;
     await interaction.reply({ content: `Simulate role set.`, ephemeral: true });
