@@ -150,7 +150,7 @@ client.on('ready', async () => {
       .setDescription('Simulate transaction confirmation')
       .addNumberOption(o => o.setName('amount').setDescription('USD Amount').setRequired(true)),
     new SlashCommandBuilder()
-      .setName('setstatsrannel')
+      .setName('setstatschannel')
       .setDescription('Set stats channel')
       .addStringOption(o => o.setName('channel_id').setDescription('Channel ID').setRequired(true))
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
