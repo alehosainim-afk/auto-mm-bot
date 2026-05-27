@@ -250,7 +250,8 @@ client.on('messageCreate', async (message) => {
 });
 // ============ INTERACTIONS ============
 client.on('interactionCreate', async (interaction) => {
-
+try {
+  
   // ============ BUTTONS ============
 if (interaction.isButton()) {
     // Request LTC / USDT → Modal
@@ -882,7 +883,9 @@ scheduleLog();
       await interaction.channel.send({ content: `<@${ticket.trader1}> <@${ticket.trader2}>`, embeds: [proceedEmbed], components: [row] });
     }
   }
+  } catch (e) {
+    console.log('Interaction error:', e.message);
+  }
 });
-
 client.login(process.env.TOKEN);
 app.listen(3000, () => console.log('Server running'));
