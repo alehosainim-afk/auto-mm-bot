@@ -1,16 +1,34 @@
 const fs = require('fs');
+const { MongoClient } = require('mongodb');
 
-function loadOwners() {
+const mongoClient = new MongoClient(process.env.MONGODB_URI);
+let db;
+
+async function connectDB() {
+  await mongoClient.connect();
+  db = mongoClient.db('auto-mm-bot');
+  console.log('Connected to MongoDB');
+}
+
+async function loadOwners() {
   try {
-    const data = fs.readFileSync('owners.json', 'utf8');
-    return new Set(JSON.parse(data));
+    const doc = await db.collection('owners').findOne({ _id: 'owners' });
+    return new Set(doc ? doc.owners : []);
   } catch {
     return new Set();
   }
 }
 
-function saveOwners() {
-  fs.writeFileSync('owners.json', JSON.stringify([...owners]));
+async function saveOwners() {
+  try {
+    await db.collection('owners').updateOne(
+      { _id: 'owners' },
+      { $set: { owners: [...owners] } },
+      { upsert: true }
+    );
+  } catch (e) {
+    console.log('Error saving owners:', e.message);
+  }
 }
 
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
