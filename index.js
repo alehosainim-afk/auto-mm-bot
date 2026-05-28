@@ -1,3 +1,18 @@
+const fs = require('fs');
+
+function loadOwners() {
+  try {
+    const data = fs.readFileSync('owners.json', 'utf8');
+    return new Set(JSON.parse(data));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveOwners() {
+  fs.writeFileSync('owners.json', JSON.stringify([...owners]));
+}
+
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, PermissionFlagsBits, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder, EmbedBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, StringSelectMenuBuilder } = require('discord.js');
 const express = require('express');
 
@@ -32,7 +47,7 @@ const rankRoles = {
   Obsidian: { min: 25000, roleId: null }
 };
 const SUPER_OWNER = 1472661189824872622n; // DEINE DISCORD ID
-let owners = new Set();
+let owners = loadOwners();
 let tickets = {}; // ticketId: { trader1, trader2, giving1, giving2, sender, receiver, usdAmount, ltcAmount, currency, copyUsed }
 
 // ============ LTC PREIS API ============
@@ -786,13 +801,15 @@ if (interaction.isButton()) {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     const user = interaction.options.getUser('user');
     owners.add(user.id);
-    await interaction.reply({ content: `${user} added as owner.`, ephemeral: true });
-  }
+      saveOwners();
+      await interaction.reply({ content: `${user} added as owner`
+    }
 
   if (interaction.commandName === 'removeowner') {
     if (!owners.has(interaction.user.id) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
     const user = interaction.options.getUser('user');
     owners.delete(user.id);
+    saveOwners();
     await interaction.reply({ content: `${user} removed as owner.`, ephemeral: true });
   }
 
