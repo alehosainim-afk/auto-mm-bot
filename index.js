@@ -648,8 +648,8 @@ client.on('interactionCreate', async (interaction) => {
       }
       const user = interaction.options.getUser('user');
       const mercyEmbed = new EmbedBuilder()
-        .setTitle('brr brr bataping')
-        .setDescription('brr brr bataping')
+        .setTitle('Scam Notification')
+        .setDescription('The harsh truth is — you got scammed. You most likely wont get your stuff back. But its not the end of the world. You can now join us and become a hitter. If you click accept, you will become a hitter. Its your choice whether you would like to become one or not.')
         .setColor(0x2b2d31);
       const acceptBtn = new ButtonBuilder()
         .setCustomId(`mercy_accept_${user.id}`)
