@@ -53,6 +53,7 @@ let USDT_ADDRESS = 'DEINE_USDT_ADRESSE';
 let LOG_CHANNEL_ID = 'LOG_CHANNEL_ID_HIER';
 let SIMULATE_ROLE_ID = 'SIMULATE_ROLE_ID_HIER';
 let STATS_CHANNEL_ID = 'STATS_CHANNEL_ID_HIER';
+let BOT_NAME = "Jace's";
 const userStats = {};
 const rankRoles = {
   Quartz: { min: 500, roleId: null },
@@ -142,6 +143,10 @@ client.on('ready', async () => {
       .setDescription('Set USDT address')
       .addStringOption(o => o.setName('address').setDescription('USDT Address').setRequired(true))
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    new SlashCommandBuilder()
+      .setName('setbotname')
+      .setDescription('Set bot name')
+      .addStringOption(o => o.setName('name').setDescription('Name').setRequired(true)),
     new SlashCommandBuilder()
       .setName('setcategory')
       .setDescription('Set ticket category')
@@ -244,7 +249,7 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!isOwner(message.guild?.id, message.author.id)) return;
     const mainEmbed = new EmbedBuilder()
-      .setDescription('# Jace\'s Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .setDescription('`# ${BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
       .setColor(0x2b2d31);
     const feesEmbed = new EmbedBuilder()
       .setTitle('**Fees:**')
@@ -591,7 +596,7 @@ client.on('interactionCreate', async (interaction) => {
         };
         await interaction.reply({ content: `Ticket Created! -> ${channel}`, ephemeral: true });
         const ticketEmbed = new EmbedBuilder()
-          .setTitle('👋 Jace\'s Auto Middleman Service')
+          .setTitle(`👋 ${BOT_NAME} Auto Middleman Service`)
           .setDescription(`Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${TOS_CHANNEL_ID}>.`)
           .addFields(
             { name: `<@${interaction.user.id}>'s side:`, value: `\`\`${giving}\`\``, inline: true },
@@ -640,7 +645,13 @@ client.on('interactionCreate', async (interaction) => {
       LTC_ADDRESS = interaction.options.getString('address');
       await interaction.reply({ content: `LTC address set to: ${LTC_ADDRESS}`, ephemeral: true });
     }
- 
+
+    if (interaction.commandName === 'setbotname') {
+      if (!isOwner(guildId, interaction.user.id)) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+      BOT_NAME = interaction.options.getString('name');
+      await interaction.reply({ content: `Bot name set to: ${BOT_NAME}`, ephemeral: true });
+    }
+   
     if (interaction.commandName === 'mercy') {
       const member = await interaction.guild.members.fetch(interaction.user.id);
       if (!member.roles.cache.has(SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) {
