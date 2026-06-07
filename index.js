@@ -249,7 +249,7 @@ client.on('messageCreate', async (message) => {
   if (message.content === '!panel') {
     if (!isOwner(message.guild?.id, message.author.id)) return;
     const mainEmbed = new EmbedBuilder()
-      .setDescription('`# ${BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#' + TOS_CHANNEL_ID + '>')
+      .setDescription(`# ${BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#${TOS_CHANNEL_ID}>`)
       .setColor(0x2b2d31);
     const feesEmbed = new EmbedBuilder()
       .setTitle('**Fees:**')
