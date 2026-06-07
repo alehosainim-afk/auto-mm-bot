@@ -127,6 +127,8 @@ async function updateRank(guild, userId) {
 
 // ============ BOT READY ============
 client.on('ready', async () => {
+  await connectDB();
+  owners = await loadOwners();
   console.log(`Bot online as ${client.user.tag}`);
 
   const commands = [
