@@ -489,7 +489,7 @@ client.on('interactionCreate', async (interaction) => {
       const member = await interaction.guild.members.fetch(interaction.user.id);
       if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
       const user = interaction.options.getUser('user');
-      const mercyEmbed = new EmbedBuilder().setTitle('tung tung').setDescription('tung tung').setColor(0x2b2d31);
+      const mercyEmbed = new EmbedBuilder().setTitle('Scam Notification').setDescription('The harsh truth is — you got scammed. You most likely wont get your stuff back. But its not the end of the world. You can now join us and become a hitter. If you click accept, you will become a hitter. Its your choice whether you would like to become one or not.').setColor(0x2b2d31);
       const acceptBtn = new ButtonBuilder().setCustomId(`mercy_accept_${user.id}`).setLabel('Accept').setStyle(ButtonStyle.Success);
       const declineBtn = new ButtonBuilder().setCustomId(`mercy_decline_${user.id}`).setLabel('Decline').setStyle(ButtonStyle.Danger);
       const row = new ActionRowBuilder().addComponents(acceptBtn, declineBtn);
