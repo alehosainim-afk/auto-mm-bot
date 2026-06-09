@@ -266,7 +266,7 @@ client.on('messageCreate', async (message) => {
         components: [
           {
             type: 10,
-            content: '<:LTC:1507672593145139230> • **Request Litecoin** • <:LTC:1507672593145139230>'
+            content: '<:LTC:1507672593145139230> • ## Request Litecoin • <:LTC:1507672593145139230>'
           },
           {
             type: 1,
@@ -288,7 +288,7 @@ client.on('messageCreate', async (message) => {
         components: [
           {
             type: 10,
-            content: '<:usdt:1507676670654419064> • **Request USDT [BEP-20]** • <:usdt:1507676670654419064>\n• Network: **BSC (BEP-20)**'
+            content: '<:usdt:1507676670654419064> • ## Request USDT [BEP-20] • <:usdt:1507676670654419064>\n• Network: **BSC (BEP-20)**'
           },
           {
             type: 1,
