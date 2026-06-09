@@ -238,11 +238,16 @@ client.on('messageCreate', async (message) => {
             content: `# ${cfg.BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#${cfg.TOS_CHANNEL_ID}>`
           },
           {
-            type: 2,
-            label: 'Tutorial',
-            style: 5,
-            url: 'https://www.youtube.com/watch?v=XIkpcT2WNPI',
-            emoji: { name: '🔗' }
+            type: 1,
+            components: [
+              {
+                type: 2,
+                label: 'Tutorial',
+                style: 5,
+                url: 'https://www.youtube.com/watch?v=XIkpcT2WNPI',
+                emoji: { name: '🔗' }
+              }
+            ]
           },
           {
             type: 14,
@@ -264,11 +269,16 @@ client.on('messageCreate', async (message) => {
             content: '<:LTC:1507672593145139230> • **Request Litecoin** • <:LTC:1507672593145139230>'
           },
           {
-            type: 2,
-            label: 'Request LTC',
-            style: 1,
-            custom_id: 'request_ltc',
-            emoji: { id: '1507672593145139230', name: 'LTC' }
+            type: 1,
+            components: [
+              {
+                type: 2,
+                label: 'Request LTC',
+                style: 1,
+                custom_id: 'request_ltc',
+                emoji: { id: '1507672593145139230', name: 'LTC' }
+              }
+            ]
           }
         ]
       },
@@ -281,18 +291,23 @@ client.on('messageCreate', async (message) => {
             content: '<:usdt:1507676670654419064> • **Request USDT [BEP-20]** • <:usdt:1507676670654419064>\n• Network: **BSC (BEP-20)**'
           },
           {
-            type: 2,
-            label: 'Request USDT [BEP-20]',
-            style: 3,
-            custom_id: 'request_usdt',
-            emoji: { id: '1507676670654419064', name: 'usdt' }
+            type: 1,
+            components: [
+              {
+                type: 2,
+                label: 'Request USDT [BEP-20]',
+                style: 3,
+                custom_id: 'request_usdt',
+                emoji: { id: '1507676670654419064', name: 'usdt' }
+              }
+            ]
           }
         ]
       }
     ]
   });
   await message.delete().catch(() => {});
-  }
+}
 });
 
 client.on('interactionCreate', async (interaction) => {
