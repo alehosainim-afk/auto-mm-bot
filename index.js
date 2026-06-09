@@ -292,8 +292,9 @@ client.on('messageCreate', async (message) => {
     ]
   });
   await message.delete().catch(() => {});
-}
- 
+  }
+});
+
 client.on('interactionCreate', async (interaction) => {
   try {
     const guildId = interaction.guildId;
