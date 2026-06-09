@@ -224,24 +224,75 @@ client.on('messageCreate', async (message) => {
   }
  
   if (message.content === '!panel') {
-    if (!isOwner(guildId, message.author.id)) return;
-    const mainEmbed = new EmbedBuilder().setDescription(`# ${cfg.BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#${cfg.TOS_CHANNEL_ID}>`).setColor(0x2b2d31);
-    const feesEmbed = new EmbedBuilder().setTitle('**Fees:**').setDescription('• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are **FREE**').setColor(0x2b2d31);
-    const ltcEmbed = new EmbedBuilder().setTitle('<:LTC:1507672593145139230> • **Request Litecoin** • <:LTC:1507672593145139230>').setColor(0x345ca3);
-    const usdtEmbed = new EmbedBuilder().setTitle('<:usdt:1507676670654419064> • **Request USDT [BEP-20]** • <:usdt:1507676670654419064>').setDescription('• Network: **BSC (BEP-20)**').setColor(0x26a17b);
-    const tutorialButton = new ButtonBuilder().setLabel('Tutorial').setStyle(ButtonStyle.Link).setURL('https://www.youtube.com/watch?v=XIkpcT2WNPI').setEmoji('🔗');
-    const ltcButton = new ButtonBuilder().setCustomId('request_ltc').setLabel('Request LTC').setStyle(ButtonStyle.Primary).setEmoji({ id: '1507672593145139230', name: 'LTC' });
-    const usdtButton = new ButtonBuilder().setCustomId('request_usdt').setLabel('Request USDT [BEP-20]').setStyle(ButtonStyle.Success).setEmoji({ id: '1507676670654419064', name: 'usdt' });
-    const row1 = new ActionRowBuilder().addComponents(tutorialButton);
-    const row2 = new ActionRowBuilder().addComponents(ltcButton);
-    const row3 = new ActionRowBuilder().addComponents(usdtButton);
-    await message.channel.send({ embeds: [mainEmbed], components: [row1] });
-    await message.channel.send({ embeds: [feesEmbed] });
-    await message.channel.send({ embeds: [ltcEmbed], components: [row2] });
-    await message.channel.send({ embeds: [usdtEmbed], components: [row3] });
-    await message.delete().catch(() => {});
-  }
-});
+  if (!isOwner(guildId, message.author.id)) return;
+  
+  await message.channel.send({
+    flags: (1 << 15),
+    components: [
+      {
+        type: 17,
+        accent_color: 0x2b2d31,
+        components: [
+          {
+            type: 10,
+            content: `# ${cfg.BOT_NAME} Auto Middleman\n• **Paid Service**\n• Read our ToS before using the bot: <#${cfg.TOS_CHANNEL_ID}>`
+          },
+          {
+            type: 2,
+            label: 'Tutorial',
+            style: 5,
+            url: 'https://www.youtube.com/watch?v=XIkpcT2WNPI',
+            emoji: { name: '🔗' }
+          },
+          {
+            type: 14,
+            divider: true,
+            spacing: 1
+          },
+          {
+            type: 10,
+            content: '## Fees:\n• Deals $250+: $1.50\n• Deals under $250: $0.50\n• Deals under $50 are __**FREE**__'
+          }
+        ]
+      },
+      {
+        type: 17,
+        accent_color: 0x345ca3,
+        components: [
+          {
+            type: 10,
+            content: '<:LTC:1507672593145139230> • **Request Litecoin** • <:LTC:1507672593145139230>'
+          },
+          {
+            type: 2,
+            label: 'Request LTC',
+            style: 1,
+            custom_id: 'request_ltc',
+            emoji: { id: '1507672593145139230', name: 'LTC' }
+          }
+        ]
+      },
+      {
+        type: 17,
+        accent_color: 0x26a17b,
+        components: [
+          {
+            type: 10,
+            content: '<:usdt:1507676670654419064> • **Request USDT [BEP-20]** • <:usdt:1507676670654419064>\n• Network: **BSC (BEP-20)**'
+          },
+          {
+            type: 2,
+            label: 'Request USDT [BEP-20]',
+            style: 3,
+            custom_id: 'request_usdt',
+            emoji: { id: '1507676670654419064', name: 'usdt' }
+          }
+        ]
+      }
+    ]
+  });
+  await message.delete().catch(() => {});
+}
  
 client.on('interactionCreate', async (interaction) => {
   try {
