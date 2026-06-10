@@ -262,7 +262,7 @@ client.on('messageCreate', async (message) => {
       },
       {
         type: 17,
-        accent_color: 0x345ca3,
+        accent_color: 0xb9b9bb,
         components: [
           {
             type: 10,
@@ -420,8 +420,9 @@ client.on('interactionCreate', async (interaction) => {
         if (ticket.copyUsed) return interaction.reply({ content: 'This button has already been used.', ephemeral: true });
         ticket.copyUsed = true;
         const address = ticket.currency === 'LTC' ? cfg.LTC_ADDRESS : cfg.USDT_ADDRESS;
-        await interaction.reply({ content: address });
-        await interaction.followUp({ content: ticket.ltcAmount });
+        await interaction.deferReply({ ephemeral: true });
+        await interaction.channel.send({ content: address });
+        await interaction.channel.send({ content: ticket.ltcAmount });
       }
       if (interaction.customId.startsWith('release_') && !interaction.customId.startsWith('release_confirm_') && !interaction.customId.startsWith('release_back_')) {
         const ticketId = interaction.channel.id;
@@ -438,11 +439,39 @@ client.on('interactionCreate', async (interaction) => {
         const ticketId = interaction.channel.id;
         const ticket = tickets[ticketId];
         if (!ticket) return;
-        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
-        const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
-        const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
-        const row = new ActionRowBuilder().addComponents(releaseBtn, cancelBtn);
-        await interaction.update({ embeds: [proceedEmbed], components: [row] });
+        await interaction.channel.send({
+  content: `<@${ticket.trader1}> <@${ticket.trader2}>`,
+  flags: (1 << 15),
+  components: [
+    {
+      type: 17,
+      accent_color: 0x00aa00,
+      components: [
+        {
+          type: 10,
+          content: `content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`
+        },
+        {
+          type: 1,
+          components: [
+            {
+              type: 2,
+              label: 'Release',
+              style: 3,
+              custom_id: `release_${ticketId}`
+            },
+            {
+              type: 2,
+              label: 'Cancel',
+              style: 2,
+              custom_id: `cancel_${ticketId}`
+            }
+          ]
+        }
+      ]
+    }
+  ]
+});
       }
       if (interaction.customId.startsWith('release_confirm_')) {
         const ticketId = interaction.channel.id;
@@ -531,7 +560,7 @@ client.on('interactionCreate', async (interaction) => {
         if (isNaN(usdAmount)) return interaction.reply({ content: 'Invalid amount.', ephemeral: true });
         ticket.usdAmount = usdAmount;
         ticket.usdConfirmed = { trader1: false, trader2: false };
-        const usdConfirmEmbed = new EmbedBuilder().setTitle('<a:loading:1507682188228034586> • USD amount set to').setDescription(`\`$${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
+        const usdConfirmEmbed = new EmbedBuilder().setTitle('# <a:loading:1507682188228034586> • USD amount set to').setDescription(`\`# $${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
         const correctBtn = new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('✅ Correct').setStyle(ButtonStyle.Success);
         const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('✖ Incorrect').setStyle(ButtonStyle.Danger);
         const row = new ActionRowBuilder().addComponents(correctBtn, incorrectBtn);
