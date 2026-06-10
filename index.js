@@ -266,7 +266,7 @@ client.on('messageCreate', async (message) => {
         components: [
           {
             type: 10,
-            content: '## <:LTC:1507672593145139230> • Request Litecoin • <:LTC:1507672593145139230>'
+            content: '## <ltc:1514165300252246107> • Request Litecoin • <ltc:1514165300252246107>'
           },
           {
             type: 1,
@@ -276,7 +276,7 @@ client.on('messageCreate', async (message) => {
                 label: 'Request LTC',
                 style: 1,
                 custom_id: 'request_ltc',
-                emoji: { id: '1507672593145139230', name: 'LTC' }
+                emoji: { id: '1514165300252246107', name: 'LTC' }
               }
             ]
           }
@@ -407,7 +407,7 @@ client.on('interactionCreate', async (interaction) => {
           const ltcAmount = (ticket.usdAmount / ltcPrice).toFixed(8);
           ticket.ltcAmount = ltcAmount; ticket.copyUsed = false;
           const address = ticket.currency === 'LTC' ? cfg.LTC_ADDRESS : cfg.USDT_ADDRESS;
-          const paymentEmbed = new EmbedBuilder().setTitle('📜 • Payment Information').setDescription(`Make sure to send the **EXACT** amount in LTC.\n\n**USD Amount**\n\`$${ticket.usdAmount}\`\n🔘 **LTC Amount**\n\`${ltcAmount}\`\n**Payment Address**\n\`\`\`${address}\`\`\`\nCurrent LTC Price: $${ltcPrice}\nThis ticket will be closed within 20 minutes if no transaction was detected.`).setColor(0x2b2d31);
+          const paymentEmbed = new EmbedBuilder().setTitle('📜 • Payment Information').setDescription(`Make sure to send the **EXACT** amount in LTC.\n\n**USD Amount**\n\`$${ticket.usdAmount}\`\n<:ltc:1514165300252246107> **LTC Amount**\n\`${ltcAmount}\`\n**Payment Address**\n\`\`\`${address}\`\`\`\nCurrent LTC Price: $${ltcPrice}\nThis ticket will be closed within 20 minutes if no transaction was detected.`).setColor(0x2b2d31);
           const copyBtn = new ButtonBuilder().setCustomId(`copy_details_${ticketId}`).setLabel('Copy Details').setStyle(ButtonStyle.Primary);
           const copyRow = new ActionRowBuilder().addComponents(copyBtn);
           await interaction.channel.send({ content: `<@${ticket.sender}> Send the LTC to the following address.`, embeds: [paymentEmbed], components: [copyRow] });
@@ -420,7 +420,8 @@ client.on('interactionCreate', async (interaction) => {
         if (ticket.copyUsed) return interaction.reply({ content: 'This button has already been used.', ephemeral: true });
         ticket.copyUsed = true;
         const address = ticket.currency === 'LTC' ? cfg.LTC_ADDRESS : cfg.USDT_ADDRESS;
-        await interaction.reply({ content: `${address}\n${ticket.ltcAmount}` });
+        await interaction.reply({ content: address });
+        await interaction.followUp({ content: ticket.ltcAmount });
       }
       if (interaction.customId.startsWith('release_') && !interaction.customId.startsWith('release_confirm_') && !interaction.customId.startsWith('release_back_')) {
         const ticketId = interaction.channel.id;
@@ -437,7 +438,7 @@ client.on('interactionCreate', async (interaction) => {
         const ticketId = interaction.channel.id;
         const ticket = tickets[ticketId];
         if (!ticket) return;
-        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
+        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
         const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
         const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
         const row = new ActionRowBuilder().addComponents(releaseBtn, cancelBtn);
@@ -647,7 +648,7 @@ client.on('interactionCreate', async (interaction) => {
           const randomLtc = (randomAmount / ltcPrice).toFixed(8);
           const randomTxid = generateTXID();
           const usdtTxid = '0x' + randomTxid.slice(0, 64);
-          const autoEmbed = new EmbedBuilder().setTitle(isUSDT ? '<:usdt:1507676670654419064> • Trade Completed' : '<:LTC:1507672593145139230> • Trade Completed').setDescription(isUSDT ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\`` : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``).setColor(isUSDT ? 0x26a17b : 0xb9b9bb);
+          const autoEmbed = new EmbedBuilder().setTitle(isUSDT ? '<:usdt:1507676670654419064> • Trade Completed' : <'ltc:1514165300252246107'> • Trade Completed').setDescription(isUSDT ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\`` : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``).setColor(isUSDT ? 0x26a17b : 0xb9b9bb);
           await channel.send({ embeds: [autoEmbed] }).catch(() => {});
           scheduleLog();
         }, delay);
