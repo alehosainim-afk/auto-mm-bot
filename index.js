@@ -648,7 +648,7 @@ client.on('interactionCreate', async (interaction) => {
           const randomLtc = (randomAmount / ltcPrice).toFixed(8);
           const randomTxid = generateTXID();
           const usdtTxid = '0x' + randomTxid.slice(0, 64);
-          const autoEmbed = new EmbedBuilder().setTitle(isUSDT ? '<:usdt:1507676670654419064> • Trade Completed' : <'ltc:1514165300252246107'> • Trade Completed').setDescription(isUSDT ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\`` : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``).setColor(isUSDT ? 0x26a17b : 0xb9b9bb);
+          const autoEmbed = new EmbedBuilder().setTitle(isUSDT ? '<:usdt:1507676670654419064> • Trade Completed' : '<:ltc:1514165300252246107> • Trade Completed').setDescription(isUSDT ? `\`${parseFloat(randomAmount).toFixed(2)}\` **USDT** ($${(parseFloat(randomAmount) - 0.01).toFixed(2)} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(usdtTxid)}\`` : `\`${randomLtc}\` **LTC** ($${randomAmount} USD)\n\n**Sender**\n\`Anonymous\`\n**Receiver**\n\`Anonymous\`\n**Transaction ID**\n\`${formatTXID(randomTxid)}\``).setColor(isUSDT ? 0x26a17b : 0xb9b9bb);
           await channel.send({ embeds: [autoEmbed] }).catch(() => {});
           scheduleLog();
         }, delay);
