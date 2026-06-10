@@ -266,7 +266,7 @@ client.on('messageCreate', async (message) => {
         components: [
           {
             type: 10,
-            content: '## <ltc:1514165300252246107> • Request Litecoin • <ltc:1514165300252246107>'
+            content: '## <:ltc:1514165300252246107> • Request Litecoin • <:ltc:1514165300252246107>'
           },
           {
             type: 1,
