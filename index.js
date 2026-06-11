@@ -581,9 +581,9 @@ client.on('interactionCreate', async (interaction) => {
         }
         tickets[channel.id] = { trader1: interaction.user.id, trader2: trader2.id, giving1: giving, giving2: traderGiving, sender: null, receiver: null, usdAmount: null, ltcAmount: null, currency: currency, copyUsed: false, rolesConfirmed: null, usdConfirmed: null, txid: null };
         await interaction.reply({ content: `Ticket Created! -> ${channel}`, ephemeral: true });
-        await channel.send({
-          content: `<@${interaction.user.id}> <@${trader2.id}>`,
-          flags: (1 << 15),
+        await channel.send({ content: `<@${interaction.user.id}> <@${trader2.id}>` });
+                await channel.send({
+                  flags: (1 << 15),
           components: [
             {
               type: 17,
