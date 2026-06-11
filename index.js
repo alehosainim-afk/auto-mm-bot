@@ -439,6 +439,11 @@ client.on('interactionCreate', async (interaction) => {
         });
         await interaction.deferUpdate();
         if (ticket.usdConfirmed.trader1 && ticket.usdConfirmed.trader2) {
+          const disabledUsdRow = new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true }).setDisabled(true),
+            new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true }).setDisabled(true)
+          );
+          await interaction.message.edit({ components: [disabledUsdRow] });
           const ltcPrice = await getLTCPrice();
           const ltcAmount = (ticket.usdAmount / ltcPrice).toFixed(8);
           ticket.ltcAmount = ltcAmount; ticket.copyUsed = false;
@@ -596,7 +601,7 @@ client.on('interactionCreate', async (interaction) => {
         if (isNaN(usdAmount)) return interaction.reply({ content: 'Invalid amount.', ephemeral: true });
         ticket.usdAmount = usdAmount;
         ticket.usdConfirmed = { trader1: false, trader2: false };
-        const usdConfirmEmbed = new EmbedBuilder().setTitle('\u200b').setDescription(`<a:loading:1507682188228034586> • USD amount set to\n## \`$${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
+        const usdConfirmEmbed = new EmbedBuilder().setTitle('\u200b').setDescription(`## <a:loading:1507682188228034586> • USD amount set to\n## \`$${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
         const correctBtn = new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true });
         const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true });
         const row = new ActionRowBuilder().addComponents(correctBtn, incorrectBtn);
