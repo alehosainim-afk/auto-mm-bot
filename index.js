@@ -449,7 +449,7 @@ client.on('interactionCreate', async (interaction) => {
       components: [
         {
           type: 10,
-          content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`
+          content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> Give your trader the items or payment you agreed on.\n\n## 2. <@${ticket.sender}> Once you have received your items, click "Release" so your trader can claim the LTC.`
         },
         {
           type: 1,
@@ -560,7 +560,7 @@ client.on('interactionCreate', async (interaction) => {
         if (isNaN(usdAmount)) return interaction.reply({ content: 'Invalid amount.', ephemeral: true });
         ticket.usdAmount = usdAmount;
         ticket.usdConfirmed = { trader1: false, trader2: false };
-        const usdConfirmEmbed = new EmbedBuilder().setTitle('# <a:loading:1507682188228034586> • USD amount set to').setDescription(`\`# $${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
+        const usdConfirmEmbed = new EmbedBuilder().setTitle('# <a:loading:1507682188228034586> • USD amount set to').setDescription(`## $${usdAmount.toFixed(2)}\nPlease confirm the USD amount.`).setColor(0x2b2d31);
         const correctBtn = new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('✅ Correct').setStyle(ButtonStyle.Success);
         const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('✖ Incorrect').setStyle(ButtonStyle.Danger);
         const row = new ActionRowBuilder().addComponents(correctBtn, incorrectBtn);
