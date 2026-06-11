@@ -609,7 +609,7 @@ client.on('interactionCreate', async (interaction) => {
                 },
                 {
                   type: 10,
-                  content: `**<@${interaction.user.id}>'s side:**\n\`\`${giving}\`\``
+                  content: `**<@${interaction.user.id}>'s side:**\n\`\`\`${giving}\`\`\``
                 },
                 {
                   type: 12,
@@ -622,7 +622,7 @@ client.on('interactionCreate', async (interaction) => {
                 },
                 {
                   type: 10,
-                  content: `**<@${trader2.id}>'s side:**\n\`\`${traderGiving}\`\``
+                  content: `**<@${trader2.id}>'s side:**\n\`\`\`${traderGiving}\`\`\``
                 },
                 {
                   type: 12,
