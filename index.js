@@ -352,8 +352,8 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.update({ embeds: [roleEmbed], components: [row] });
         if (ticket.sender && ticket.receiver && ticket.sender !== ticket.receiver) {
           const confirmEmbed = new EmbedBuilder().setTitle('<a:loading:1507682188228034586> • Is This Information Correct?').setDescription(`**Sender**\n<@${ticket.sender}>\n**Receiver**\n<@${ticket.receiver}>\n\nMake sure you have selected the right role! If you didn't then click "Incorrect"`).setColor(0x2b2d31);
-          const correctBtn = new ButtonBuilder().setCustomId(`confirm_roles_correct_${ticketId}`).setLabel('✅ Correct').setStyle(ButtonStyle.Success);
-          const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_roles_incorrect_${ticketId}`).setLabel('✖ Incorrect').setStyle(ButtonStyle.Danger);
+          const correctBtn = new ButtonBuilder().setCustomId(`confirm_roles_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true });
+          const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_roles_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true });
           const confirmRow = new ActionRowBuilder().addComponents(correctBtn, incorrectBtn);
           ticket.rolesConfirmed = { trader1: false, trader2: false };
           await interaction.channel.send({ content: `<@${ticket.trader1}> <@${ticket.trader2}>`, embeds: [confirmEmbed], components: [confirmRow] });
@@ -371,7 +371,23 @@ client.on('interactionCreate', async (interaction) => {
         const key = ticket.trader1 === interaction.user.id ? 'trader1' : 'trader2';
         if (ticket.rolesConfirmed[key]) return interaction.reply({ content: 'You already confirmed.', ephemeral: true });
         ticket.rolesConfirmed[key] = true;
-        await interaction.reply({ content: `✅ <@${interaction.user.id}> clicked Correct.` });
+        await interaction.channel.send({
+          flags: (1 << 15),
+          components: [
+            {
+              type: 17,
+              accent_color: 0x00aa00,
+              components: [
+                {
+                  type: 10,
+                  content: `✅ <@${interaction.user.id}> clicked Correct.`
+                }
+              ]
+            }
+          ]
+        });
+        await interaction.deferUpdate();
+        await interaction.message.edit({ components: [] });
         if (ticket.rolesConfirmed.trader1 && ticket.rolesConfirmed.trader2) {
           const usdEmbed = new EmbedBuilder().setTitle('💵 • Set the amount in USD value').setColor(0x2b2d31);
           const setUsdBtn = new ButtonBuilder().setCustomId(`set_usd_${ticketId}`).setLabel('Set USD Amount').setStyle(ButtonStyle.Primary);
@@ -401,7 +417,23 @@ client.on('interactionCreate', async (interaction) => {
         const key = ticket.trader1 === interaction.user.id ? 'trader1' : 'trader2';
         if (ticket.usdConfirmed[key]) return interaction.reply({ content: 'You already confirmed.', ephemeral: true });
         ticket.usdConfirmed[key] = true;
-        await interaction.reply({ content: `✅ <@${interaction.user.id}> confirmed the USD amount.` });
+        await interaction.message.edit({ components: [] });
+        await interaction.channel.send({
+          flags: (1 << 15),
+          components: [
+            {
+              type: 17,
+              accent_color: 0x00aa00,
+              components: [
+                {
+                  type: 10,
+                  content: `✅ <@${interaction.user.id}> confirmed the USD amount.`
+                }
+              ]
+            }
+          ]
+        });
+        await interaction.deferUpdate();
         if (ticket.usdConfirmed.trader1 && ticket.usdConfirmed.trader2) {
           const ltcPrice = await getLTCPrice();
           const ltcAmount = (ticket.usdAmount / ltcPrice).toFixed(8);
@@ -561,8 +593,8 @@ client.on('interactionCreate', async (interaction) => {
         ticket.usdAmount = usdAmount;
         ticket.usdConfirmed = { trader1: false, trader2: false };
         const usdConfirmEmbed = new EmbedBuilder().setTitle('\u200b').setDescription(`<a:loading:1507682188228034586> • USD amount set to\n## \`$${usdAmount.toFixed(2)}\`\nPlease confirm the USD amount.`).setColor(0x2b2d31);
-        const correctBtn = new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('✅ Correct').setStyle(ButtonStyle.Success);
-        const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('✖ Incorrect').setStyle(ButtonStyle.Danger);
+        const correctBtn = new ButtonBuilder().setCustomId(`confirm_usd_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true });
+        const incorrectBtn = new ButtonBuilder().setCustomId(`confirm_usd_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true });
         const row = new ActionRowBuilder().addComponents(correctBtn, incorrectBtn);
         await interaction.reply({ content: `<@${ticket.trader1}> <@${ticket.trader2}>`, embeds: [usdConfirmEmbed], components: [row] });
       }
