@@ -449,7 +449,7 @@ client.on('interactionCreate', async (interaction) => {
       components: [
         {
           type: 10,
-          content: `content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`
+          content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`
         },
         {
           type: 1,
