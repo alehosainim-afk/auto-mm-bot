@@ -581,10 +581,69 @@ client.on('interactionCreate', async (interaction) => {
         }
         tickets[channel.id] = { trader1: interaction.user.id, trader2: trader2.id, giving1: giving, giving2: traderGiving, sender: null, receiver: null, usdAmount: null, ltcAmount: null, currency: currency, copyUsed: false, rolesConfirmed: null, usdConfirmed: null, txid: null };
         await interaction.reply({ content: `Ticket Created! -> ${channel}`, ephemeral: true });
-        const ticketEmbed = new EmbedBuilder().setTitle(`👋 ${cfg.BOT_NAME} Auto Middleman Service`).setDescription(`Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`).addFields({ name: `<@${interaction.user.id}>'s side:`, value: `\`\`${giving}\`\``, inline: true }, { name: `<@${trader2.id}>'s side:`, value: `\`\`${traderGiving}\`\``, inline: true }).setColor(0xf5deb3);
-        const deleteBtn = new ButtonBuilder().setCustomId('delete_ticket').setLabel('✖ Delete Ticket').setStyle(ButtonStyle.Danger);
-        const deleteRow = new ActionRowBuilder().addComponents(deleteBtn);
-        await channel.send({ content: `<@${interaction.user.id}> <@${trader2.id}>`, embeds: [ticketEmbed], components: [deleteRow] });
+        await channel.send({
+          content: `<@${interaction.user.id}> <@${trader2.id}>`,
+          flags: (1 << 15),
+          components: [
+            {
+              type: 17,
+              accent_color: 0xf5deb3,
+              components: [
+                {
+                  type: 10,
+                  content: `## 👋 ${cfg.BOT_NAME} Auto Middleman Service`
+                },
+                {
+                  type: 14,
+                  divider: true,
+                  spacing: 1
+                },
+                {
+                  type: 10,
+                  content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
+                },
+                {
+                  type: 14,
+                  divider: true,
+                  spacing: 1
+                },
+                {
+                  type: 10,
+                  content: `**<@${interaction.user.id}>'s side:**\n\`\`${giving}\`\``
+                },
+                {
+                  type: 12,
+                  items: [{ media: { url: interaction.user.displayAvatarURL({ extension: 'png', size: 64 }) } }]
+                },
+                {
+                  type: 14,
+                  divider: true,
+                  spacing: 1
+                },
+                {
+                  type: 10,
+                  content: `**<@${trader2.id}>'s side:**\n\`\`${traderGiving}\`\``
+                },
+                {
+                  type: 12,
+                  items: [{ media: { url: trader2.displayAvatarURL({ extension: 'png', size: 64 }) } }]
+                },
+                {
+                  type: 1,
+                  components: [
+                    {
+                      type: 2,
+                      label: 'Delete Ticket',
+                      style: 4,
+                      custom_id: 'delete_ticket',
+                      emoji: { id: '1514717874281779330', name: 'Animated_Cross', animated: true }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        });
         const roleEmbed = new EmbedBuilder().setTitle('🛡️ • Select your role').setDescription('"**Sender**" if you are __Sending__ LTC to the bot.\n"**Receiver**" if you are __Receiving__ LTC *later* from the bot.\n\n**Sender**\n...\n**Receiver**\n...').setColor(0x2b2d31);
         const senderBtn = new ButtonBuilder().setCustomId(`role_sender_${channel.id}`).setLabel('Sender').setStyle(ButtonStyle.Primary);
         const receiverBtn = new ButtonBuilder().setCustomId(`role_receiver_${channel.id}`).setLabel('Receiver').setStyle(ButtonStyle.Primary);
