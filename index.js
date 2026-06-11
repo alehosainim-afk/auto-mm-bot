@@ -421,7 +421,6 @@ client.on('interactionCreate', async (interaction) => {
         const key = ticket.trader1 === interaction.user.id ? 'trader1' : 'trader2';
         if (ticket.usdConfirmed[key]) return interaction.reply({ content: 'You already confirmed.', ephemeral: true });
         ticket.usdConfirmed[key] = true;
-        await interaction.message.edit({ components: [] });
         await interaction.channel.send({
           flags: (1 << 15),
           components: [
