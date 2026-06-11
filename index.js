@@ -371,11 +371,6 @@ client.on('interactionCreate', async (interaction) => {
                 const key = ticket.trader1 === interaction.user.id ? 'trader1' : 'trader2';
                 if (ticket.rolesConfirmed[key]) return interaction.reply({ content: 'You already confirmed.', ephemeral: true });
                 ticket.rolesConfirmed[key] = true;
-                const disabledRoleRow = new ActionRowBuilder().addComponents(
-                  new ButtonBuilder().setCustomId(`confirm_roles_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true }).setDisabled(true),
-                  new ButtonBuilder().setCustomId(`confirm_roles_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true }).setDisabled(true)
-                );
-                await interaction.message.edit({ components: [disabledRoleRow] });
                 await interaction.channel.send({
                   flags: (1 << 15),
                   components: [
@@ -393,7 +388,12 @@ client.on('interactionCreate', async (interaction) => {
                 });
                 await interaction.deferUpdate();
                 if (ticket.rolesConfirmed.trader1 && ticket.rolesConfirmed.trader2) {
-                  const usdEmbed = new EmbedBuilder().setTitle('💵 • Set the amount in USD value').setColor(0x2b2d31);
+                          const disabledRoleRow = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder().setCustomId(`confirm_roles_correct_${ticketId}`).setLabel('Correct').setStyle(ButtonStyle.Success).setEmoji({ id: '1514717904350740600', name: 'Animated_Tick', animated: true }).setDisabled(true),
+                            new ButtonBuilder().setCustomId(`confirm_roles_incorrect_${ticketId}`).setLabel('Incorrect').setStyle(ButtonStyle.Danger).setEmoji({ id: '1514717874281779330', name: 'Animated_Cross', animated: true }).setDisabled(true)
+                          );
+                          await interaction.message.edit({ components: [disabledRoleRow] });
+                          const usdEmbed = new EmbedBuilder().setTitle('💵 • Set the amount in USD value').setColor(0x2b2d31);
                   const setUsdBtn = new ButtonBuilder().setCustomId(`set_usd_${ticketId}`).setLabel('Set USD Amount').setStyle(ButtonStyle.Primary);
                   const usdRow = new ActionRowBuilder().addComponents(setUsdBtn);
                   await interaction.channel.send({ content: `<@${ticket.sender}>`, embeds: [usdEmbed], components: [usdRow] });
