@@ -600,7 +600,7 @@ client.on('interactionCreate', async (interaction) => {
                 },
                 {
                   type: 10,
-                  content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
+                  content: `> Make sure to follow the steps and read the instructions thoroughly.\n> Please explicitly state the trade details if the information below is inaccurate.\n> By using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
                 },
                 {
                   type: 14,
