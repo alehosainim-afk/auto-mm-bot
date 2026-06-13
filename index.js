@@ -608,12 +608,17 @@ client.on('interactionCreate', async (interaction) => {
                   spacing: 1
                 },
                 {
-                  type: 10,
-                  content: `**<@${interaction.user.id}>'s side:**\n\`\`\`${giving}\`\`\``
-                },
-                {
-                  type: 12,
-                  items: [{ media: { url: interaction.user.displayAvatarURL({ extension: 'png', size: 64 }) } }]
+                  type: 9,
+                  components: [
+                    {
+                      type: 10,
+                      content: `**<@${interaction.user.id}>'s side:**\n\`\`\`${giving}\`\`\``
+                    }
+                  ],
+                  accessory: {
+                    type: 11,
+                    media: { url: interaction.user.displayAvatarURL({ extension: 'png', size: 64 }) }
+                  }
                 },
                 {
                   type: 14,
@@ -621,12 +626,17 @@ client.on('interactionCreate', async (interaction) => {
                   spacing: 1
                 },
                 {
-                  type: 10,
-                  content: `**<@${trader2.id}>'s side:**\n\`\`\`${traderGiving}\`\`\``
-                },
-                {
-                  type: 12,
-                  items: [{ media: { url: trader2.displayAvatarURL({ extension: 'png', size: 64 }) } }]
+                  type: 9,
+                  components: [
+                    {
+                      type: 10,
+                      content: `**<@${trader2.id}>'s side:**\n\`\`\`${traderGiving}\`\`\``
+                    }
+                  ],
+                  accessory: {
+                    type: 11,
+                    media: { url: trader2.displayAvatarURL({ extension: 'png', size: 64 }) }
+                  }
                 },
                 {
                   type: 1,
