@@ -327,7 +327,6 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.showModal(modal);
       }
       if (interaction.customId === 'delete_ticket') {
-        if (!isOwner(guildId, interaction.user.id)) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
         await interaction.reply({ content: 'Deleting ticket...', ephemeral: true });
         setTimeout(() => interaction.channel.delete().catch(() => {}), 2000);
       }
@@ -444,10 +443,12 @@ client.on('interactionCreate', async (interaction) => {
           );
           await interaction.message.edit({ components: [disabledUsdRow] });
           const ltcPrice = await getLTCPrice();
-          const ltcAmount = (ticket.usdAmount / ltcPrice).toFixed(8);
+          const fee = ticket.usdAmount >= 250 ? 1.50 : ticket.usdAmount >= 50 ? 0.50 : 0;
+          const totalUsd = ticket.usdAmount + fee;
+          const ltcAmount = (totalUsd / ltcPrice).toFixed(8);
           ticket.ltcAmount = ltcAmount; ticket.copyUsed = false;
           const address = ticket.currency === 'LTC' ? cfg.LTC_ADDRESS : cfg.USDT_ADDRESS;
-          const paymentEmbed = new EmbedBuilder().setTitle('📜 • Payment Information').setDescription(`Make sure to send the **EXACT** amount in LTC.\n\n**USD Amount**\n\`$${ticket.usdAmount}\`\n<:ltc:1514165300252246107> **LTC Amount**\n\`${ltcAmount}\`\n**Payment Address**\n\`\`\`${address}\`\`\`\nCurrent LTC Price: $${ltcPrice}\nThis ticket will be closed within 20 minutes if no transaction was detected.`).setColor(0x2b2d31);
+          const paymentEmbed = new EmbedBuilder().setTitle('📜 • Payment Information').setDescription(`Make sure to send the **EXACT** amount in LTC.\n\n**USD Amount**\n\`$${totalUsd.toFixed(2)}\`\n<:ltc:1514165300252246107> **LTC Amount**\n\`${ltcAmount}\`\n**Payment Address**\n\`\`\`${address}\`\`\`\nCurrent LTC Price: $${ltcPrice}\nThis ticket will be closed within 20 minutes if no transaction was detected.`).setColor(0x2b2d31);
           const copyBtn = new ButtonBuilder().setCustomId(`copy_details_${ticketId}`).setLabel('Copy Details').setStyle(ButtonStyle.Primary);
           const copyRow = new ActionRowBuilder().addComponents(copyBtn);
           await interaction.channel.send({ content: `<@${ticket.sender}> Send the LTC to the following address.`, embeds: [paymentEmbed], components: [copyRow] });
@@ -481,7 +482,7 @@ client.on('interactionCreate', async (interaction) => {
         if (!ticket) return;
         await interaction.deferUpdate();
         const proceedEmbed = new EmbedBuilder()
-          .setDescription(`**✅ • You may proceed with your trade.**\n\n> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`)
+          .setDescription(`**✅ • You may proceed with your trade.**\n\n> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`)
           .setColor(0x00aa00);
         const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
         const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
@@ -795,7 +796,7 @@ client.on('interactionCreate', async (interaction) => {
       await interaction.reply({ embeds: [confirmedEmbed], ephemeral: true });
       await interaction.channel.send({ embeds: [confirmedEmbed] });
       if (ticket) {
-        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
+        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
         const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
         const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
         const row = new ActionRowBuilder().addComponents(releaseBtn, cancelBtn);
