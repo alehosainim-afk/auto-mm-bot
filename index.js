@@ -598,14 +598,9 @@ client.on('interactionCreate', async (interaction) => {
                   divider: true,
                   spacing: 1
                 },
-{
-                  type: 9,
-                  components: [
-                    {
-                      type: 10,
-                      content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
-                    }
-                  ]
+                {
+                  type: 10,
+                  content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
                 },
                 {
                   type: 14,
