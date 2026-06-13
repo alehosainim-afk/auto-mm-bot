@@ -481,7 +481,7 @@ client.on('interactionCreate', async (interaction) => {
         if (!ticket) return;
         await interaction.deferUpdate();
         const proceedEmbed = new EmbedBuilder()
-          .setDescription(`**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`)
+          .setDescription(`**✅ • You may proceed with your trade.**\n\n> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`)
           .setColor(0x00aa00);
         const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
         const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
@@ -795,7 +795,7 @@ client.on('interactionCreate', async (interaction) => {
       await interaction.reply({ embeds: [confirmedEmbed], ephemeral: true });
       await interaction.channel.send({ embeds: [confirmedEmbed] });
       if (ticket) {
-        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
+        const proceedEmbed = new EmbedBuilder().setTitle('✅ • You may proceed with your trade.').setDescription(`> ## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n> ## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`).setColor(0x00aa00);
         const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
         const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
         const row = new ActionRowBuilder().addComponents(releaseBtn, cancelBtn);
