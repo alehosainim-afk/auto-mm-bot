@@ -231,7 +231,7 @@ client.on('messageCreate', async (message) => {
     components: [
       {
         type: 17,
-        accent_color: 0x2b2d31,
+        accent_color: 0xbfbfbf,
         components: [
           {
             type: 10,
