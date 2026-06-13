@@ -479,39 +479,14 @@ client.on('interactionCreate', async (interaction) => {
         const ticketId = interaction.channel.id;
         const ticket = tickets[ticketId];
         if (!ticket) return;
-        await interaction.channel.send({
-  content: `<@${ticket.trader1}> <@${ticket.trader2}>`,
-  flags: (1 << 15),
-  components: [
-    {
-      type: 17,
-      accent_color: 0x00aa00,
-      components: [
-        {
-          type: 10,
-          content: `**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> Give your trader the items or payment you agreed on.\n\n## 2. <@${ticket.sender}> Once you have received your items, click "Release" so your trader can claim the LTC.`
-        },
-        {
-          type: 1,
-          components: [
-            {
-              type: 2,
-              label: 'Release',
-              style: 3,
-              custom_id: `release_${ticketId}`
-            },
-            {
-              type: 2,
-              label: 'Cancel',
-              style: 2,
-              custom_id: `cancel_${ticketId}`
-            }
-          ]
-        }
-      ]
-    }
-  ]
-});
+        await interaction.deferUpdate();
+        const proceedEmbed = new EmbedBuilder()
+          .setDescription(`**✅ • You may proceed with your trade.**\n\n## 1. <@${ticket.receiver}> **Give your trader the items or payment you agreed on.**\n\n## 2. <@${ticket.sender}> **Once you have received your items, click "Release" so your trader can claim the LTC.**`)
+          .setColor(0x00aa00);
+        const releaseBtn = new ButtonBuilder().setCustomId(`release_${ticketId}`).setLabel('Release').setStyle(ButtonStyle.Success);
+        const cancelBtn = new ButtonBuilder().setCustomId(`cancel_${ticketId}`).setLabel('Cancel').setStyle(ButtonStyle.Secondary);
+        const proceedRow = new ActionRowBuilder().addComponents(releaseBtn, cancelBtn);
+        await interaction.channel.send({ content: `<@${ticket.trader1}> <@${ticket.trader2}>`, embeds: [proceedEmbed], components: [proceedRow] });
       }
       if (interaction.customId.startsWith('release_confirm_')) {
         const ticketId = interaction.channel.id;
