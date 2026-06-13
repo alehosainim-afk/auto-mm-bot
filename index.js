@@ -344,7 +344,7 @@ client.on('interactionCreate', async (interaction) => {
         } else {
           ticket.receiver = interaction.user.id;
         }
-        const roleEmbed = new EmbedBuilder().setTitle('🛡️ • Select your role').setDescription('"**Sender**" if you are __Sending__ LTC to the bot.\n"**Receiver**" if you are __Receiving__ LTC *later* from the bot.\n\n**Sender**\n' + (ticket.sender ? `<@${ticket.sender}>` : '...') + '\n**Receiver**\n' + (ticket.receiver ? `<@${ticket.receiver}>` : '...')).setColor(0x2b2d31);
+        const roleEmbed = new EmbedBuilder().setTitle('<:roleicon:1447022899419418685> • Select your role').setDescription('> • "__**Sender**__" if you are __Sending__ LTC to the bot.\n> • "__**Receiver**__" if you are __Receiving__ LTC *later* from the bot.\n\n**Sender**\n' + (ticket.sender ? `<@${ticket.sender}>` : '...') + '\n**Receiver**\n' + (ticket.receiver ? `<@${ticket.receiver}>` : '...')).setColor(0x2b2d31);
         const senderBtn = new ButtonBuilder().setCustomId(`role_sender_${ticketId}`).setLabel('Sender').setStyle(ButtonStyle.Primary);
         const receiverBtn = new ButtonBuilder().setCustomId(`role_receiver_${ticketId}`).setLabel('Receiver').setStyle(ButtonStyle.Primary);
         const resetBtn = new ButtonBuilder().setCustomId(`role_reset_${ticketId}`).setLabel('Reset').setStyle(ButtonStyle.Danger);
