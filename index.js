@@ -587,7 +587,7 @@ client.on('interactionCreate', async (interaction) => {
           components: [
             {
               type: 17,
-              accent_color: 0xf5deb3,
+              accent_color: 0x2b2d31,
               components: [
                 {
                   type: 10,
@@ -598,9 +598,14 @@ client.on('interactionCreate', async (interaction) => {
                   divider: true,
                   spacing: 1
                 },
-                {
-                  type: 10,
-                  content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
+{
+                  type: 9,
+                  components: [
+                    {
+                      type: 10,
+                      content: `Make sure to follow the steps and read the instructions thoroughly.\nPlease explicitly state the trade details if the information below is inaccurate.\nBy using this bot, you agree to our ToS <#${cfg.TOS_CHANNEL_ID}>.`
+                    }
+                  ]
                 },
                 {
                   type: 14,
