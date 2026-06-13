@@ -321,8 +321,8 @@ client.on('interactionCreate', async (interaction) => {
         const currency = interaction.customId === 'request_ltc' ? 'LTC' : 'USDT';
         const modal = new ModalBuilder().setCustomId(`request_modal_${currency}`).setTitle('Fill out the format');
         const traderInput = new TextInputBuilder().setCustomId('trader_id').setLabel("Paste Your Trader's Username or ID").setPlaceholder('e.g.: kookie.js / 133101227415175174').setStyle(TextInputStyle.Short).setRequired(true);
-        const givingInput = new TextInputBuilder().setCustomId('giving').setLabel('What are You giving?').setStyle(TextInputStyle.Paragraph).setMaxLength(500).setRequired(true);
-        const traderGivingInput = new TextInputBuilder().setCustomId('trader_giving').setLabel('What is Your Trader giving?').setStyle(TextInputStyle.Paragraph).setMaxLength(500).setRequired(true);
+        const givingInput = new TextInputBuilder().setCustomId('giving').setLabel('What are You giving?').setStyle(TextInputStyle.Paragraph).setMinLength(2).setMaxLength(500).setRequired(true);
+        const traderGivingInput = new TextInputBuilder().setCustomId('trader_giving').setLabel('What is Your Trader giving?').setStyle(TextInputStyle.Paragraph).setMinLength(2).setMaxLength(500).setRequired(true);
         modal.addComponents(new ActionRowBuilder().addComponents(traderInput), new ActionRowBuilder().addComponents(givingInput), new ActionRowBuilder().addComponents(traderGivingInput));
         await interaction.showModal(modal);
       }
