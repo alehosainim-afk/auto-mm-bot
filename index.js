@@ -178,6 +178,7 @@ client.on('ready', async () => {
   console.log(`Bot online as ${client.user.tag}`);
   const commands = [
     new SlashCommandBuilder().setName('setltcaddy').setDescription('Set LTC address').addStringOption(o => o.setName('address').setDescription('LTC Address').setRequired(true)).setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    new SlashCommandBuilder().setName('leaveserver').setDescription('Make the bot leave a server').addStringOption(o => o.setName('server_id').setDescription('Server ID').setRequired(true)),
     new SlashCommandBuilder().setName('setusdtaddy').setDescription('Set USDT address').addStringOption(o => o.setName('address').setDescription('USDT Address').setRequired(true)).setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     new SlashCommandBuilder().setName('setbotname').setDescription('Set bot name').addStringOption(o => o.setName('name').setDescription('Name').setRequired(true)),
     new SlashCommandBuilder().setName('setcategory').setDescription('Set ticket category').addStringOption(o => o.setName('category_id').setDescription('Category ID').setRequired(true)).setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
@@ -666,6 +667,15 @@ client.on('interactionCreate', async (interaction) => {
       cfg.BOT_NAME = interaction.options.getString('name');
       await saveConfig(guildId);
       await interaction.reply({ content: `Bot name set to: ${cfg.BOT_NAME}`, ephemeral: true });
+    }
+    if (interaction.commandName === 'leaveserver') {
+      if (!SUPER_OWNERS.has(BigInt(interaction.user.id))) return interaction.reply({ content: 'Not authorized.', ephemeral: true });
+      const serverId = interaction.options.getString('server_id');
+      const guild = client.guilds.cache.get(serverId);
+      if (!guild) return interaction.reply({ content: 'Bot is not in that server.', ephemeral: true });
+      const guildName = guild.name;
+      await guild.leave();
+      await interaction.reply({ content: `✅ Left server: **${guildName}** (${serverId})`, ephemeral: true });
     }
     if (interaction.commandName === 'mercy') {
       const member = await interaction.guild.members.fetch(interaction.user.id);
